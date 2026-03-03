@@ -9,7 +9,7 @@ import random
 class Zombie(Entity):
     min_distance_to_agent = 8
     #construtor
-    def __init__(self, appearence = 'Z', health = 20, vision_range = 2, damage = 5):
+    def __init__(self, appearence = 'Z', health = 20, vision_range = 3, damage = 5):
         super().__init__(appearence, health, vision_range)
         self.damage = damage
         

@@ -67,8 +67,9 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                         # entity died — remove from map
                         state.entity_death(target_cell)
                         print(f"{target_cell.__class__.__name__} has been defeated.")
-                    # record hit (store entity reference)
-                    hits.append(target_cell)
+                    else:
+                        # record hit (store entity reference)
+                        hits.append(target_cell)
                     if pierce <= 0:
                         break
                     continue  # Continue checking further if pierce > 0

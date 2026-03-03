@@ -1,7 +1,7 @@
 from world_objects.ground import Ground
 from world_objects.door import Door
 from world_objects.wall import Wall
-from world_objects.small_wall import SmallWall
+from world_objects.fence import Fence
 
 from items.ammo import Ammo
 from items.medkit import Medkit
@@ -33,15 +33,15 @@ class Buildings:
         
         world.grid[x+3][y:y+8] = [Wall(), Door(), Wall(), Wall(), Wall(), Door(), Wall(), Wall()]
         
-        world.grid[x+4][y] = SmallWall()
-        world.grid[x+4][y+2] = SmallWall()
-        world.grid[x+4][y+4] = SmallWall()
-        world.grid[x+4][y+6] = SmallWall()
+        world.grid[x+4][y] = Fence()
+        world.grid[x+4][y+2] = Fence()
+        world.grid[x+4][y+4] = Fence()
+        world.grid[x+4][y+6] = Fence()
         
-        world.grid[x+5][y] = SmallWall()
-        world.grid[x+5][y+2] = SmallWall()
-        world.grid[x+5][y+4] = SmallWall()
-        world.grid[x+5][y+6] = SmallWall()
+        world.grid[x+5][y] = Fence()
+        world.grid[x+5][y+2] = Fence()
+        world.grid[x+5][y+4] = Fence()
+        world.grid[x+5][y+6] = Fence()
         
     # W W W W W W W W
     # W _ _ W _ _ _ W
@@ -65,15 +65,15 @@ class Buildings:
         
         world.grid[x+3][y:y+8] = [Wall(), Door(), Wall(), Wall(), Wall(), Door(), Wall(), Wall()]
         
-        world.grid[x+4][y] = SmallWall()
-        world.grid[x+4][y+2] = SmallWall()
-        world.grid[x+4][y+4] = SmallWall()
-        world.grid[x+4][y+6] = SmallWall()
+        world.grid[x+4][y] = Fence()
+        world.grid[x+4][y+2] = Fence()
+        world.grid[x+4][y+4] = Fence()
+        world.grid[x+4][y+6] = Fence()
         
-        world.grid[x+5][y] = SmallWall()
-        world.grid[x+5][y+2] = SmallWall()
-        world.grid[x+5][y+4] = SmallWall()
-        world.grid[x+5][y+6] = SmallWall()
+        world.grid[x+5][y] = Fence()
+        world.grid[x+5][y+2] = Fence()
+        world.grid[x+5][y+4] = Fence()
+        world.grid[x+5][y+6] = Fence()
         
         if variant == 1:
             world.grid[x+1][y+2] = Medkit()
@@ -106,15 +106,15 @@ class Buildings:
         
         world.grid[x+4][y:y+8] = [Wall(), Door(), Wall(), Wall(), Wall(), Door(), Wall(), Wall()]
         
-        world.grid[x+3][y] = SmallWall()
-        world.grid[x+3][y+2] = SmallWall()
-        world.grid[x+3][y+4] = SmallWall()
-        world.grid[x+3][y+6] = SmallWall()
+        world.grid[x+3][y] = Fence()
+        world.grid[x+3][y+2] = Fence()
+        world.grid[x+3][y+4] = Fence()
+        world.grid[x+3][y+6] = Fence()
         
-        world.grid[x+2][y] = SmallWall()
-        world.grid[x+2][y+2] = SmallWall()
-        world.grid[x+2][y+4] = SmallWall()
-        world.grid[x+2][y+6] = SmallWall()
+        world.grid[x+2][y] = Fence()
+        world.grid[x+2][y+2] = Fence()
+        world.grid[x+2][y+4] = Fence()
+        world.grid[x+2][y+6] = Fence()
     
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
@@ -138,15 +138,15 @@ class Buildings:
         
         world.grid[x+4][y:y+8] = [Wall(), Door(), Wall(), Wall(), Wall(), Door(), Wall(), Wall()]
         
-        world.grid[x+3][y] = SmallWall()
-        world.grid[x+3][y+2] = SmallWall()
-        world.grid[x+3][y+4] = SmallWall()
-        world.grid[x+3][y+6] = SmallWall()
+        world.grid[x+3][y] = Fence()
+        world.grid[x+3][y+2] = Fence()
+        world.grid[x+3][y+4] = Fence()
+        world.grid[x+3][y+6] = Fence()
         
-        world.grid[x+2][y] = SmallWall()
-        world.grid[x+2][y+2] = SmallWall()
-        world.grid[x+2][y+4] = SmallWall()
-        world.grid[x+2][y+6] = SmallWall()
+        world.grid[x+2][y] = Fence()
+        world.grid[x+2][y+2] = Fence()
+        world.grid[x+2][y+4] = Fence()
+        world.grid[x+2][y+6] = Fence()
         
     # W W W W W W _ _
     # W _ W _ _ W _ _
@@ -290,11 +290,11 @@ class Buildings:
         world.grid[x+3][y+3] = Door()
         world.grid[x+3][y+4:y+6] = [Wall(), Wall()]
         
-        world.grid[x+4][y+2] = SmallWall()
-        world.grid[x+4][y+4] = SmallWall()
+        world.grid[x+4][y+2] = Fence()
+        world.grid[x+4][y+4] = Fence()
         
-        world.grid[x+5][y+2] = SmallWall()
-        world.grid[x+5][y+4] = SmallWall()    
+        world.grid[x+5][y+2] = Fence()
+        world.grid[x+5][y+4] = Fence()    
     
     # _ _ W W W W W _
     # _ _ W _ _ _ W _
@@ -318,11 +318,11 @@ class Buildings:
         world.grid[x+3][y+4] = Door()
         world.grid[x+3][y+5:y+7] = [Wall(), Wall()]
         
-        world.grid[x+4][y+3] = SmallWall()
-        world.grid[x+4][y+5] = SmallWall()
+        world.grid[x+4][y+3] = Fence()
+        world.grid[x+4][y+5] = Fence()
         
-        world.grid[x+5][y+3] = SmallWall()
-        world.grid[x+5][y+5] = SmallWall()
+        world.grid[x+5][y+3] = Fence()
+        world.grid[x+5][y+5] = Fence()
         
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
@@ -346,11 +346,11 @@ class Buildings:
         world.grid[x+4][y+3] = Door()
         world.grid[x+4][y+4:y+6] = [Wall(), Wall()]
         
-        world.grid[x+3][y+2] = SmallWall()
-        world.grid[x+3][y+4] = SmallWall()
+        world.grid[x+3][y+2] = Fence()
+        world.grid[x+3][y+4] = Fence()
         
-        world.grid[x+2][y+2] = SmallWall()
-        world.grid[x+2][y+4] = SmallWall()
+        world.grid[x+2][y+2] = Fence()
+        world.grid[x+2][y+4] = Fence()
         
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
@@ -374,8 +374,8 @@ class Buildings:
         world.grid[x+4][y+4] = Door()
         world.grid[x+4][y+5:y+7] = [Wall(), Wall()]
         
-        world.grid[x+3][y+3] = SmallWall()
-        world.grid[x+3][y+5] = SmallWall()
+        world.grid[x+3][y+3] = Fence()
+        world.grid[x+3][y+5] = Fence()
         
-        world.grid[x+2][y+3] = SmallWall()
-        world.grid[x+2][y+5] = SmallWall()
+        world.grid[x+2][y+3] = Fence()
+        world.grid[x+2][y+5] = Fence()

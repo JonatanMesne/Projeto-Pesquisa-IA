@@ -92,22 +92,27 @@ class State:
                 self.agent.status.append("hungry")
             if self.agent.thirst >= self.thirst_threshold and "thirsty" not in self.agent.status:
                 self.agent.status.append("thirsty")
+            if self.agent.stamina <= 0 and "tired" not in self.agent.status:
+                self.agent.status.append("tired")
                 
             if "hungry" not in self.agent.status and "thirsty" not in self.agent.status:
                 self.agent.stamina = min(self.agent.max_stamina, self.agent.stamina + self.stamina_per_time)
                 
             if "hungry" in self.agent.status:
                 self.agent.health -= self.hunger_damage
+                print("You are dying of hunger.")
                 if self.agent.health <= 0:
                     print("You died of hunger.")
                     break
             if "thirsty" in self.agent.status:
                 self.agent.health -= self.thirst_damage
+                print("You are dying of thirst.")
                 if self.agent.health <= 0:
                     print("You died of thirst.")
                     break
             if "bleeding" in self.agent.status:
                 self.agent.health -= self.bleeding_damage
+                print("You are bleeding to death.")
                 if self.agent.health <= 0:
                     print("You died of bleeding.")
                     break

@@ -2,7 +2,7 @@ from chunks import Chunk
 from world_objects.ground import Ground
 from world_objects.door import Door
 from world_objects.wall import Wall
-from world_objects.small_wall import SmallWall
+from world_objects.fence import Fence
 
 from items.item import Item
 
@@ -33,13 +33,13 @@ class Buildings:
         
         world.grid[x+4][y:y+7] = [Wall(), Door(), Wall(), Wall(), Wall(), Door(), Wall()]
         
-        world.grid[x+5][y] = SmallWall()
-        world.grid[x+5][y+3] = SmallWall()
-        world.grid[x+5][y+6] = SmallWall()
+        world.grid[x+5][y] = Fence()
+        world.grid[x+5][y+3] = Fence()
+        world.grid[x+5][y+6] = Fence()
         
-        world.grid[x+6][y] = SmallWall()
-        world.grid[x+6][y+3] = SmallWall()
-        world.grid[x+6][y+6] = SmallWall()
+        world.grid[x+6][y] = Fence()
+        world.grid[x+6][y+3] = Fence()
+        world.grid[x+6][y+6] = Fence()
         
     # _ W W W W W W W
     # _ W i _ W _ i W
@@ -63,13 +63,13 @@ class Buildings:
     # W W W W W W W _
     @staticmethod
     def house1C(world, x, y):
-        world.grid[x+1][y] = SmallWall()
-        world.grid[x+1][y+3] = SmallWall()
-        world.grid[x+1][y+6] = SmallWall()
+        world.grid[x+1][y] = Fence()
+        world.grid[x+1][y+3] = Fence()
+        world.grid[x+1][y+6] = Fence()
         
-        world.grid[x+2][y] = SmallWall()
-        world.grid[x+2][y+3] = SmallWall()
-        world.grid[x+2][y+6] = SmallWall()
+        world.grid[x+2][y] = Fence()
+        world.grid[x+2][y+3] = Fence()
+        world.grid[x+2][y+6] = Fence()
         
         world.grid[x+3][y:y+7] = [Wall(), Door(), Wall(), Wall(), Wall(), Door(), Wall()]
         
@@ -202,11 +202,11 @@ class Buildings:
         
         world.grid[x+4][y:y+7] = [Wall(), Wall(), Wall(), Door(), Wall(), Wall(), Wall()]
         
-        world.grid[x+5][y+2] = SmallWall()
-        world.grid[x+5][y+4] = SmallWall()
+        world.grid[x+5][y+2] = Fence()
+        world.grid[x+5][y+4] = Fence()
         
-        world.grid[x+6][y+2] = SmallWall()
-        world.grid[x+6][y+4] = SmallWall()
+        world.grid[x+6][y+2] = Fence()
+        world.grid[x+6][y+4] = Fence()
     
     # _ W W W W W W W
     # _ W i _ _ i _ W
@@ -230,11 +230,11 @@ class Buildings:
     # W W W W W W W _
     @staticmethod
     def house3C(world, x, y):
-        world.grid[x+1][y+2] = SmallWall()
-        world.grid[x+1][y+4] = SmallWall()
+        world.grid[x+1][y+2] = Fence()
+        world.grid[x+1][y+4] = Fence()
         
-        world.grid[x+2][y+2] = SmallWall()
-        world.grid[x+2][y+4] = SmallWall()
+        world.grid[x+2][y+2] = Fence()
+        world.grid[x+2][y+4] = Fence()
         
         world.grid[x+3][y:y+7] = [Wall(), Wall(), Wall(), Door(), Wall(), Wall(), Wall()]
         

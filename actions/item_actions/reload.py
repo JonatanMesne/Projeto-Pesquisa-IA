@@ -40,7 +40,7 @@ class Reload(Action):     #class for the action of reloading a weapon
                 break
 
         if transferred > 0:
-            print(f"You reloaded your {weapon.name} with {transferred} ammo. Current ammo: {weapon.ammo}/{weapon.ammo_capacity}")
+            print(f"You reloaded your {weapon.__class__.__name__} with {transferred} ammo. Current ammo: {weapon.ammo}/{weapon.ammo_capacity}")
             return True
 
         print("You don't have any ammo to reload your weapon.")

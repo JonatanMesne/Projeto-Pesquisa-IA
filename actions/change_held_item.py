@@ -12,7 +12,7 @@ class ChangeHeldItem(Action):     #class for the action of changing the item in 
             return True
         if state.index >= 0 and state.index < len(state.agent.inventory):
             state.agent.item_in_hand = state.agent.inventory[state.index]
-            print(f"You are now holding: {state.agent.item_in_hand.name}")
+            print(f"You are now holding: {state.agent.item_in_hand.__class__.__name__}")
             return True
         print("Invalid index. No item in hand.")
         return False
