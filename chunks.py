@@ -8,7 +8,7 @@ class Chunk:
     chunk_size = 8
         
     @staticmethod
-    def createEmptyChunk(map, chunk_x):
+    def create_empty_chunk(map, chunk_x):
         for i in range(Chunk.chunk_size):
             for j in range(Chunk.chunk_size):
                 map[chunk_x].append(Ground())

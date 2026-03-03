@@ -2,8 +2,7 @@ from actions.action import Action
 from items.ammo import Ammo
 
 class Reload(Action):     #class for the action of reloading a weapon
-    def __init__(self):
-        super().__init__(1) #action takes 1 time unit
+    duration = 1
 
     @staticmethod
     def action(state) -> bool:
@@ -13,6 +12,7 @@ class Reload(Action):     #class for the action of reloading a weapon
         # Already full
         needed = weapon.ammo_capacity - weapon.ammo
         if needed <= 0:
+            print("Your weapon is already fully loaded.")
             return False
 
         transferred = 0
@@ -40,7 +40,8 @@ class Reload(Action):     #class for the action of reloading a weapon
                 break
 
         if transferred > 0:
-            state.advance_time()
+            print(f"You reloaded your {weapon.name} with {transferred} ammo. Current ammo: {weapon.ammo}/{weapon.ammo_capacity}")
             return True
 
+        print("You don't have any ammo to reload your weapon.")
         return False

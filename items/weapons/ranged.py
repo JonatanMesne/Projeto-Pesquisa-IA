@@ -11,5 +11,8 @@ class RangedWeapon(Item, ABC):
         self.ammo = self.ammo_capacity
         self.fire_rate = fire_rate #projectiles per time step
         
-    def print_status(self):
-        print(f'Ammo: {self.ammo}/{self.ammo_capacity}')
+    def item_info(self):
+        return f"{self.__class__.__name__}: Damage {self.damage}x{self.fire_rate} | Range {self.range} | Ammo {self.ammo}/{self.ammo_capacity} | Inventory Space: {self.inventory_space}"
+        
+    def detailed_item_info(self) -> str:
+        return f"{self.__class__.__name__}: Damage {self.damage}x{self.fire_rate} | Range {self.range} | Pierce {self.pierce} | Ammo {self.ammo}/{self.ammo_capacity} | Inventory Space: {self.inventory_space}"

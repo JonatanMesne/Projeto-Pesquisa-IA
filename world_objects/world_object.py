@@ -10,4 +10,4 @@ class WorldObject:
         self.action = action
     
     def __str__(self) -> str:
-        return self.appearence
+        return self.__class__.__name__

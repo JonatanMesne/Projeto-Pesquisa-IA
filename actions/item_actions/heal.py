@@ -1,8 +1,7 @@
 from actions.action import Action
 
 class Heal(Action):     #class for the action of perceiving the surroundings
-    def __init__(self):
-        super().__init__(1) #action takes 1 time units
+    duration = 1
 
     @staticmethod
     def action(state) -> bool:
@@ -11,5 +10,7 @@ class Heal(Action):     #class for the action of perceiving the surroundings
             state.agent.health = state.agent.max_health
         state.agent.remove_item(state.agent.item_in_hand)
         state.agent.item_in_hand = None
-        state.advance_time()
+        if "bleeding" in state.agent.status:
+            state.agent.status.remove("bleeding")
+        print(f"You used a medkit and healed {state.agent.item_in_hand.heal_amount} health. Current health: {state.agent.health}") # type: ignore
         return True

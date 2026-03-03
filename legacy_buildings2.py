@@ -1,4 +1,3 @@
-from chunks import Chunk
 from world_objects.ground import Ground
 from world_objects.door import Door
 from world_objects.wall import Wall

@@ -1,23 +1,14 @@
-from entities.zombie import Zombie
+from items.item import Item
 from items.ammo import Ammo
 from items.medkit import Medkit
+from items.food import Food
+from items.water import Water
 from items.weapons.baseball_bat import BaseballBat
 from items.weapons.knife import Knife
 from items.weapons.pistol import Pistol
 from items.weapons.smg import Smg
-from world import World
-from entities.agent import Agent
-from state import State
-from world_objects.door import Door
-from actions.walk import Walk
-from actions.door_action import DoorAction
-from actions.climb import Climb
-from actions.pickup_item import PickupItem
-from actions.update_vision import UpdateVision
-from items.weapons.ranged import RangedWeapon
-from actions.item_actions.attack import Attack
 
-mapa = World()
+from state import State
 
 #direction = 1 (up) | 2 (right) | 3 (down) | 4 (left)
 UP = 1
@@ -27,19 +18,10 @@ LEFT = 4
 
 estado = State()
 
-agente = Agent()
+estado.reset(seed='', player_controlled=True, time_limit=1000)
 
-mapa.generateMap(agente)
+# print(estado.world)
 
-# print(mapa)
+# estado.agent.inventory = [Ammo(), Medkit(), Food(), Water(), BaseballBat(), Knife(), Pistol(), Smg()]
 
-mapa.generateBuildings() 
-
-print(mapa)
-
-estado.agent = agente
-estado.map_grid = mapa.grid
-
-agente.update_possible_actions(estado)
-
-agente.print_actions()
+estado.environment_start()

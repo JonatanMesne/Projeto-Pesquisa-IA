@@ -1,14 +1,13 @@
 from actions.action import Action
 
 class DoorAction(Action):   #class for opening and closing doors
-    def __init__(self):
-        super().__init__(1) #action takes 1 time unit
+    duration = 1
+    need_direction = True
         
     @staticmethod
     def action(state) -> bool:
-        state.advance_time()
         world_object = state.get_world_object_in_front()
-        if(isinstance(world_object.action, DoorAction)):
+        if world_object.action.__name__ == 'DoorAction':
             #Toggle door state between open and closed
             if(world_object.is_solid == True):
                 world_object.appearence = 'd'  #Open door
@@ -16,6 +15,8 @@ class DoorAction(Action):   #class for opening and closing doors
             else:
                 world_object.appearence = 'D'  #Closed door
                 world_object.is_solid = True
+            print(f"You {'opened' if not world_object.is_solid else 'closed'} the door.")
             return True
         else:
+            print("There is no door in that direction.")
             return False

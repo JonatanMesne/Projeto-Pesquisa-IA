@@ -4,12 +4,10 @@ from items.ammo import Ammo
 from world_objects.ground import Ground
 
 class PickupItem(Action):   #class for picking up items
-    def __init__(self):
-        super().__init__(1) #action takes 1 time unit
+    duration = 1
         
     @staticmethod
     def action(state) -> bool:
-        state.advance_time()
         if isinstance(state.agent.standing_on, Item):
             item_to_pickup = state.agent.standing_on
             
@@ -43,7 +41,12 @@ class PickupItem(Action):   #class for picking up items
                         state.agent.inventory.append(new_ammo_stack)
                         state.agent.inventory_space_used += new_ammo_stack.inventory_space
                         state.agent.standing_on = Ground()
+                        print(f"You picked up: {item_to_pickup.__class__.__name__} (stack of {ammo_to_pickup} ammo)")
                         return True
+                if return_value:
+                    print(f"You picked up: {item_to_pickup.__class__.__name__} (added to existing stacks)")
+                else:
+                    print("Cannot pick up ammo: inventory is full.")
                 return return_value  # Inventory is full
             else:
                 # Handle regular items (non-ammo)
@@ -52,8 +55,11 @@ class PickupItem(Action):   #class for picking up items
                     state.agent.inventory_space_used += item_to_pickup.inventory_space
                     # Remove the item from the map grid
                     state.agent.standing_on = Ground()  # the agent is now standing on an empty ground tile
+                    print(f"You picked up: {item_to_pickup.__class__.__name__}")
                     return True
                 else:
+                    print("Cannot pick up item: inventory is full.")
                     return False  # Inventory is full
         else:
+            print("No item to pick up here.")
             return False  # No item to pick up

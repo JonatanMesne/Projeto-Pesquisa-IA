@@ -1,13 +1,12 @@
 from actions.action import Action
 
 class UpdateVision(Action):     #class for the action of perceiving the surroundings
-    def __init__(self):
-        super().__init__(0) #action takes 0 time units
+    duration = 0
 
     @staticmethod
     def action(state) -> bool:
-        if state.zombie is not None:
-            entity = state.zombie
+        if state.action_zombie is not None:
+            entity = state.action_zombie
         else:
             entity = state.agent
         vision_data = []
@@ -29,11 +28,11 @@ class UpdateVision(Action):     #class for the action of perceiving the surround
             vision_data.append([])
             for j in range(vision_range * 2 + 1 + lost_vision[1]):
                 current_pos = [check_pos[0] + i, check_pos[1] + j]
-                if (current_pos[0] >= len(state.map_grid) or
-                    current_pos[1] >= len(state.map_grid[0])):
+                if (current_pos[0] >= len(state.world.grid) or
+                    current_pos[1] >= len(state.world.grid[0])):
                     break
                 else:
-                    vision_data[i].append(state.map_grid[current_pos[0]][current_pos[1]])
+                    vision_data[i].append(state.world.grid[current_pos[0]][current_pos[1]])
 
         entity.vision_data = vision_data
         return True
