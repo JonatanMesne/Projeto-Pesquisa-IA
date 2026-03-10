@@ -10,8 +10,8 @@ class Buildings:
     # W i i W i i W _
     # W i i W i i W _
     # W D W W W D W _
-    # w _ _ w _ _ w _
-    # w _ _ w _ _ w _
+    # F _ _ F _ _ F _
+    # F _ _ F _ _ F _
     # _ _ _ _ _ _ _ _
     @staticmethod
     def house1A(world, x, y):
@@ -38,16 +38,16 @@ class Buildings:
     # _ W i i W i i W
     # _ W i i W i i W
     # _ W D W W W D W
-    # _ w _ _ w _ _ w
-    # _ w _ _ w _ _ w
+    # _ F _ _ F _ _ w
+    # _ F _ _ F _ _ w
     # _ _ _ _ _ _ _ _
     @staticmethod
     def house1B(world, x, y):
         Buildings.house1A(world, x, y+1)
 
     # _ _ _ _ _ _ _ _
-    # w _ _ w _ _ w _
-    # w _ _ w _ _ w _
+    # F _ _ F _ _ F _
+    # F _ _ F _ _ F _
     # W D W W W D W _
     # W i i W i i W _
     # W i i W i i W _
@@ -74,8 +74,8 @@ class Buildings:
         world.grid[x+7][y:y+7] = [Wall(), Wall(), Wall(), Wall(), Wall(), Wall(), Wall()]
 
     # _ _ _ _ _ _ _ _
-    # _ w _ _ w _ _ w
-    # _ w _ _ w _ _ w
+    # _ F _ _ F _ _ w
+    # _ F _ _ F _ _ w
     # _ W D W W W D W
     # _ W i i W i i W
     # _ W i i W i i W
@@ -158,8 +158,8 @@ class Buildings:
     # W i i i i i W _
     # W i i i i i W _
     # W W W D W W W _
-    # _ _ w _ w _ _ _
-    # _ _ w _ w _ _ _
+    # _ _ F _ F _ _ _
+    # _ _ F _ F _ _ _
     # _ _ _ _ _ _ _ _
     @staticmethod
     def house3A(world, x, y):
@@ -184,16 +184,16 @@ class Buildings:
     # _ W i i i i i W
     # _ W i i i i i W
     # _ W W W D W W W
-    # _ _ _ w _ w _ _
-    # _ _ _ w _ w _ _
+    # _ _ _ F _ F _ _
+    # _ _ _ F _ F _ _
     # _ _ _ _ _ _ _ _
     @staticmethod
     def house3B(world, x, y):
         Buildings.house3A(world, x, y+1)    
         
     # _ _ _ _ _ _ _ _
-    # _ _ w _ w _ _ _
-    # _ _ w _ w _ _ _
+    # _ _ F _ F _ _ _
+    # _ _ F _ F _ _ _
     # W W W D W W W _
     # W i i i i i W _
     # W i i i i i W _
@@ -218,8 +218,8 @@ class Buildings:
         world.grid[x+7][y:y+7] = [Wall(), Wall(), Wall(), Wall(), Wall(), Wall(), Wall()]
         
     # _ _ _ _ _ _ _ _
-    # _ _ _ w _ w _ _
-    # _ _ _ w _ w _ _
+    # _ _ _ F _ F _ _
+    # _ _ _ F _ F _ _
     # _ W W W D W W W
     # _ W i i i i i W
     # _ W i i i i i W

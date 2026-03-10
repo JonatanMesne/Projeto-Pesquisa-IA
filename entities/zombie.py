@@ -53,11 +53,13 @@ class Zombie(Entity):
                             state.entity_direction = 2  # right
                     break
         if state.entity_direction == 0:
-            state.entity_direction = random.randint(1, 4)
+            # state.entity_direction = random.randint(1, 4)
+            state.entity_direction = state.world.get_seed_number(1, 4) + 1 # Random direction if agent is not in vision
         if abs(distance_to_agent[0]) + abs(distance_to_agent[1]) == 1:
             # Attack the agent
             state.agent.health -= self.damage
-            random_number = random.randint(1, 100)
+            # random_number = random.randint(1, 100)
+            random_number = state.world.get_seed_number(2, 100) + 1
             if random_number <= 20 and "bleeding" not in state.agent.status:
                 state.agent.status.append("bleeding")
         else:

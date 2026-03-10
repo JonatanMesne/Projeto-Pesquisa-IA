@@ -15,8 +15,8 @@ class Buildings:
     # W _ _ _ W _ _ W
     # W _ _ _ W _ _ W
     # W D W W W D W W
-    # w _ w _ w _ w _
-    # w _ w _ w _ w _
+    # F _ F _ F _ F _
+    # F _ F _ F _ F _
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
     @staticmethod
@@ -47,8 +47,8 @@ class Buildings:
     # W _ _ W _ _ _ W
     # W _ _ W _ _ _ W
     # W D W W W D W W
-    # w _ w _ w _ w _
-    # w _ w _ w _ w _
+    # F _ F _ F _ F _
+    # F _ F _ F _ F _
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
     @staticmethod
@@ -86,8 +86,8 @@ class Buildings:
     
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
-    # w _ w _ w _ w _
-    # w _ w _ w _ w _
+    # F _ F _ F _ F _
+    # F _ F _ F _ F _
     # W D W W W D W W
     # W _ _ _ W _ _ W
     # W _ _ _ W _ _ W
@@ -118,8 +118,8 @@ class Buildings:
     
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
-    # w _ w _ w _ w _
-    # w _ w _ w _ w _
+    # F _ F _ F _ F _
+    # F _ F _ F _ F _
     # W D W W W D W W
     # W _ _ W _ _ _ W
     # W _ _ W _ _ _ W
@@ -272,8 +272,8 @@ class Buildings:
     # _ W _ _ _ W _ _
     # _ W _ _ _ W _ _
     # _ W W D W W _ _
-    # _ _ w _ w _ _ _
-    # _ _ w _ w _ _ _
+    # _ _ F _ F _ _ _
+    # _ _ F _ F _ _ _
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
     @staticmethod
@@ -300,8 +300,8 @@ class Buildings:
     # _ _ W _ _ _ W _
     # _ _ W _ _ _ W _
     # _ _ W W D W W _
-    # _ _ _ w _ w _ _
-    # _ _ _ w _ w _ _
+    # _ _ _ F _ F _ _
+    # _ _ _ F _ F _ _
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
     @staticmethod
@@ -326,8 +326,8 @@ class Buildings:
         
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
-    # _ _ w _ w _ _ _
-    # _ _ w _ w _ _ _
+    # _ _ F _ F _ _ _
+    # _ _ F _ F _ _ _
     # _ W W D W W _ _
     # _ W _ _ _ W _ _
     # _ W _ _ _ W _ _
@@ -354,8 +354,8 @@ class Buildings:
         
     # _ _ _ _ _ _ _ _
     # _ _ _ _ _ _ _ _
-    # _ _ _ w _ w _ _
-    # _ _ _ w _ w _ _
+    # _ _ _ F _ F _ _
+    # _ _ _ F _ F _ _
     # _ _ W W D W W _
     # _ _ W _ _ _ W _
     # _ _ W _ _ _ W _

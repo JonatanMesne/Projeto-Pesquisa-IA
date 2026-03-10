@@ -16,8 +16,8 @@ class Buildings:
     # _ W _ _ W _ _ W
     # _ W _ _ W _ _ W
     # _ W D W W W D W
-    # _ w _ _ w _ _ w
-    # _ w _ _ w _ _ w
+    # _ F _ _ F _ _ w
+    # _ F _ _ F _ _ w
     # _ _ _ _ _ _ _ _
     @staticmethod
     def house1A(world, variant, x, y):
@@ -45,13 +45,13 @@ class Buildings:
         world.grid[x + 6][y + 4] = Fence()
         world.grid[x + 6][y + 7] = Fence()
         
-    # W W W W W w w _
+    # W W W W W F w _
     # W _ _ _ D _ _ _
     # W _ _ _ W _ _ _
-    # W W W W W w w _
+    # W W W W W F w _
     # W _ _ _ W _ _ _
     # W _ _ _ D _ _ _
-    # W W W W W w w _
+    # W W W W W F w _
     # _ _ _ _ _ _ _ _   
     @staticmethod
     def house1B(world, variant, x, y):
@@ -74,13 +74,13 @@ class Buildings:
         world.grid[x+6][y:y+7] = [Wall(), Wall(), Wall(), Wall(), Wall(), Fence(), Fence()]
 
     # _ _ _ _ _ _ _ _
-    # _ w w W W W W W
+    # _ F w W W W W W
     # _ _ _ D _ _ _ W
     # _ _ _ W _ _ _ W
-    # _ w w W W W W W
+    # _ F w W W W W W
     # _ _ _ W _ _ _ W
     # _ _ _ D _ _ _ W
-    # _ w w W W W W W
+    # _ F w W W W W W
     @staticmethod
     def house1C(world, variant, x, y):
         world.grid[x+1][y+1:y+8] = [Fence(), Fence(), Wall(), Wall(), Wall(), Wall(), Wall()]
@@ -102,8 +102,8 @@ class Buildings:
         world.grid[x+7][y+1:y+8] = [Fence(), Fence(), Wall(), Wall(), Wall(), Wall(), Wall()]
 
     # _ _ _ _ _ _ _ _
-    # w _ _ w _ _ w _
-    # w _ _ w _ _ w _
+    # F _ _ F _ _ F _
+    # F _ _ F _ _ F _
     # W D W W W D W _
     # W _ _ W _ _ W _
     # W _ _ W _ _ W _
@@ -258,8 +258,8 @@ class Buildings:
     # _ W _ _ _ _ _ W
     # _ W _ _ _ _ _ W
     # _ W W W D W W W
-    # _ _ _ w _ w _ _
-    # _ _ _ w _ w _ _
+    # _ _ _ F _ F _ _
+    # _ _ _ F _ F _ _
     # _ _ _ _ _ _ _ _
     @staticmethod
     def house3A(world, variant, x, y):
@@ -284,9 +284,9 @@ class Buildings:
 
     # W W W W W _ _ _
     # W _ _ _ W _ _ _
-    # W _ _ _ W w w _
+    # W _ _ _ W F w _
     # W _ _ _ D _ _ _
-    # W _ _ _ W w w _
+    # W _ _ _ W F w _
     # W _ _ _ W _ _ _
     # W W W W W _ _ _
     # _ _ _ _ _ _ _ _
@@ -314,9 +314,9 @@ class Buildings:
     # _ _ _ _ _ _ _ _
     # _ _ _ W W W W W
     # _ _ _ W _ _ _ W
-    # _ w w W _ _ _ W
+    # _ F w W _ _ _ W
     # _ _ _ D _ _ _ W
-    # _ w w W _ _ _ W
+    # _ F w W _ _ _ W
     # _ _ _ W _ _ _ W
     # _ _ _ W W W W W
     @staticmethod
@@ -343,8 +343,8 @@ class Buildings:
         world.grid[x+7][y+3:y+8] = [Wall(), Wall(), Wall(), Wall(), Wall()]
 
     # _ _ _ _ _ _ _ _
-    # _ _ w _ w _ _ _
-    # _ _ w _ w _ _ _
+    # _ _ F _ F _ _ _
+    # _ _ F _ F _ _ _
     # W W W D W W W _
     # W _ _ _ _ _ W _
     # W _ _ _ _ _ W _
