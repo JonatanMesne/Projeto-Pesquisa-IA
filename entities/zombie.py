@@ -9,9 +9,10 @@ import random
 class Zombie(Entity):
     min_distance_to_agent = 8
     #construtor
-    def __init__(self, appearence = 'Z', health = 20, vision_range = 3, damage = 5):
+    def __init__(self, appearence = 'Z', health = 20, vision_range = 3, damage = 5, item_drop_chance = 30):
         super().__init__(appearence, health, vision_range)
         self.damage = damage
+        self.item_drop_chance = item_drop_chance
         
     def print_status(self):
         print(f'Health: {self.health}')
@@ -28,6 +29,16 @@ class Zombie(Entity):
             self.position = position
         else:
             self.place_zombie(world, agent)
+
+    def zombie_death(self, state):
+        state.zombies.remove(self)
+        state.zombies_killed += 1
+        print("\nZombie killed!!!")
+        # get item from state world
+        if isinstance(self.standing_on, Ground):
+            self.standing_on = state.world.choose_item(self.item_drop_chance)
+            if isinstance(self.standing_on, Ground):    
+                print("\nItem dropped: ", self.standing_on)
         
     def zombie_action(self, state):
         # Behavior logic for the zombie

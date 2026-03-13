@@ -126,16 +126,23 @@ class World:
         self.place_items()
         
     def place_items(self):
-        item_array = [Ammo, Ammo, Medkit, Medkit, Food, Food, Water, Water, BaseballBat, Knife, Pistol, Smg]
         for i in range(len(self.grid)):
             for j in range(len(self.grid[0])):
                 if isinstance(self.grid[i][j], Item):
-                    seed_number = self.get_seed_number(2, 100)
-                    if seed_number > self.item_chance:
-                        self.grid[i][j] = Ground()
-                    else:
-                        seed_number = seed_number % len(item_array)
-                        self.grid[i][j] = item_array[seed_number]()
+                    item = self.choose_item()
+                    self.grid[i][j] = item
+            
+    def choose_item(self, item_chance = None):
+        if(item_chance == None):
+            item_chance = self.item_chance
+        item_array = [Ammo, Ammo, Medkit, Medkit, Food, Food, Water, Water, BaseballBat, Knife, Pistol, Smg]
+        seed_number = self.get_seed_number(2, 100)
+        if seed_number > item_chance:
+            return Ground()
+        else:
+            seed_number = seed_number % len(item_array)
+            return item_array[seed_number]()
+        
                         
     def generate_wave(self, state):
         for _ in range(self.wave_size):
@@ -155,7 +162,7 @@ class World:
             if len(self.seed) == 0:
                 self.generate_seed()
             
-        print("Seed:", self.seed)
+        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSeed:", self.seed)
         
         #extracting starting coordinates for agent from seed
         agent_x = self.get_seed_number(3, self.height * Chunk.chunk_size)

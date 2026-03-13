@@ -13,8 +13,8 @@ class State:
         self.current_action: Action | None = None
         self.time_elapsed = 0
         self.index = -1
-        self.hunger_per_time = 3
-        self.thirst_per_time = 3
+        self.hunger_per_time = 1
+        self.thirst_per_time = 1
         self.stamina_per_time = 5
         self.hunger_damage = 3
         self.thirst_damage = 3
@@ -125,7 +125,6 @@ class State:
                 self.world.generate_wave(self)
         
     def entity_death(self, entity):
-        self.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
         if isinstance(entity, Zombie):
-            self.zombies.remove(entity)
-            self.zombies_killed += 1
+            entity.zombie_death(self)
+        self.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on

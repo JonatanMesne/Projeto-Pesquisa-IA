@@ -13,5 +13,3 @@ class Chunk:
             for j in range(Chunk.chunk_size):
                 map[chunk_x].append(Ground())
             chunk_x += 1
-            
-        

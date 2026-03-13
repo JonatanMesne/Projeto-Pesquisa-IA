@@ -27,7 +27,7 @@ class Walk(Action):     #class for the action of walking 1 tile
         #Check if next position is valid
         if (next_position[0] < 0 or next_position[0] >= len(state.world.grid) or
             next_position[1] < 0 or next_position[1] >= len(state.world.grid[0]) or 
-            state.world.grid[next_position[0]][next_position[1]].is_solid):
+            (state.world.grid[next_position[0]][next_position[1]].is_solid and not entity.standing_on.is_solid)):
             # print("Invalid move to position:", next_position)
             return False
         #Move entity to next position, restoring the ground it was standing on and updating where the entity is standing
