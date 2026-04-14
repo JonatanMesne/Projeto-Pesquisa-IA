@@ -21,10 +21,10 @@ class Walk(Action):     #class for the action of walking 1 tile
             next_position[0] += 1
         elif state.entity_direction == 4:
             next_position[1] -= 1
-        else:
+        else:   #shouldn't be possible
             print("Invalid direction:", state.entity_direction)
             return False
-        #Check if next position is valid
+        #Check if next position is not valid
         if (next_position[0] < 0 or next_position[0] >= len(state.world.grid) or
             next_position[1] < 0 or next_position[1] >= len(state.world.grid[0]) or 
             (state.world.grid[next_position[0]][next_position[1]].is_solid and not entity.standing_on.is_solid)):
@@ -32,8 +32,10 @@ class Walk(Action):     #class for the action of walking 1 tile
             return False
         #Move entity to next position, restoring the ground it was standing on and updating where the entity is standing
         state.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
+        state.world.id_grid[entity.position[0]][entity.position[1]] = entity.standing_on.id
         entity.standing_on = state.world.grid[next_position[0]][next_position[1]]
         state.world.grid[next_position[0]][next_position[1]] = entity
+        state.world.id_grid[next_position[0]][next_position[1]] = entity.id
         entity.position = next_position
         # print("Walked to position:", entity.position)
         return True

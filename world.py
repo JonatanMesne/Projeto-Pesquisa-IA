@@ -23,6 +23,19 @@ class World:
         self.seed_pointer = 0
         self.wave_size = wave_size
         self.item_chance = 15
+        self.id_grid = []
+        
+    vector = []
+    #self.vector = [self.length * Chunk.chunk_size, self.height * Chunk.chunk_size, self.id_grid]
+
+    def update_vector(self):
+        self.vector = [self.length * Chunk.chunk_size, self.height * Chunk.chunk_size, self.id_grid]
+
+    def init_id_grid(self):
+        for i in range(self.height * Chunk.chunk_size):
+            self.id_grid.append([])
+            for j in range(self.length * Chunk.chunk_size):
+                self.id_grid[i].append(self.grid[i][j].id)
         
     def generate_seed(self):
         for _ in range(16):
@@ -128,7 +141,7 @@ class World:
     def place_items(self):
         for i in range(len(self.grid)):
             for j in range(len(self.grid[0])):
-                if isinstance(self.grid[i][j], Item):
+                if self.grid[i][j].__class__.__name__ == 'Item':
                     item = self.choose_item()
                     self.grid[i][j] = item
             
@@ -182,6 +195,7 @@ class World:
         state.agent.place_entity(self.grid, [agent_x, agent_y])
         
         self.generate_wave(state)
+        self.init_id_grid()
             
     def __str__(self) -> str:
         grid = ''

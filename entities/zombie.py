@@ -1,18 +1,23 @@
 from entities.entity import Entity
 from actions.update_vision import UpdateVision
 from actions.walk import Walk
-from entities.agent import Agent
 from world_objects.ground import Ground
-from world_objects.world_object import WorldObject
 import random
 
 class Zombie(Entity):
+    id = 2
     min_distance_to_agent = 8
     #construtor
     def __init__(self, appearence = 'Z', health = 20, vision_range = 3, damage = 5, item_drop_chance = 30):
         super().__init__(appearence, health, vision_range)
         self.damage = damage
         self.item_drop_chance = item_drop_chance
+
+    vector = []
+    #self.vector = [self.health, self.id_vision_data, self.position, self.standing_on.id]
+
+    def update_vector(self):
+        self.vector = [self.health, self.id_vision_data, self.position, self.standing_on.id]
         
     def print_status(self):
         print(f'Health: {self.health}')
@@ -35,9 +40,9 @@ class Zombie(Entity):
         state.zombies_killed += 1
         print("\nZombie killed!!!")
         # get item from state world
-        if isinstance(self.standing_on, Ground):
+        if self.standing_on.__class__.__name__ == "Ground":
             self.standing_on = state.world.choose_item(self.item_drop_chance)
-            if isinstance(self.standing_on, Ground):    
+            if self.standing_on.__class__.__name__ == "Ground":    
                 print("\nItem dropped: ", self.standing_on)
         
     def zombie_action(self, state):
@@ -49,7 +54,7 @@ class Zombie(Entity):
         for i in range(len(self.vision_data)):
             for j in range(len(self.vision_data[i])):
                 obj = self.vision_data[i][j]
-                if obj is not None and isinstance(obj, Agent):
+                if obj is not None and obj.__class__.__name__ == "Agent":
                     distance_to_agent[0] = obj.position[0] - self.position[0]
                     distance_to_agent[1] = obj.position[1] - self.position[1]
                     if abs(distance_to_agent[0]) >= abs(distance_to_agent[1]):
@@ -106,7 +111,7 @@ class Zombie(Entity):
                     max_y = len(state.world.grid[0])
                     if 0 <= new_x < max_x and 0 <= new_y < max_y:
                         object_in_front = state.world.grid[new_x][new_y]
-                        if isinstance(object_in_front, WorldObject):
+                        if object_in_front.__class__.__name__ == "WorldObject":
                             object_in_front.durability -= 1
                             if object_in_front.durability <= 0:
                                 state.world.grid[new_x][new_y] = Ground()

@@ -1,6 +1,7 @@
 from items.item import Item
 
 class Ammo(Item):
+    id = 23
     def __init__(self):
         super().__init__(appearence='a', action=None, inventory_space=1, has_action=False)
         self.ammo_count = 30

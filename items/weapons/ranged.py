@@ -1,8 +1,13 @@
 from items.item import Item
+from actions.item_actions.reload import Reload
+from actions.item_actions.unload import Unload
 from abc import ABC
 
 class RangedWeapon(Item, ABC):
+    id = 30
     def __init__(self, appearence='r', action=[], inventory_space=2, range=3, damage=5, pierce=1, ammo_capacity=5, fire_rate=1):
+        action.append(Reload)
+        action.append(Unload)
         super().__init__(appearence=appearence, action=action, inventory_space=inventory_space)
         self.damage = damage
         self.range = range
