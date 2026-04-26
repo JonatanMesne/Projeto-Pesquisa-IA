@@ -18,10 +18,11 @@ LEFT = 4
 
 estado = State()
 
-estado.reset(seed='', player_controlled=True, time_limit=1000)
+while True:
+    estado.reset(seed='', player_controlled=True, time_limit=1000)
 
-# print(estado.world)
+    # print(estado.world)
 
-# estado.agent.inventory = [Ammo(), Medkit(), Food(), Water(), BaseballBat(), Knife(), Pistol(), Smg()]
+    # estado.agent.inventory = [Ammo(), Medkit(), Food(), Water(), BaseballBat(), Knife(), Pistol(), Smg()]
 
-estado.environment_start()
+    estado.environment_start()

@@ -49,6 +49,8 @@ class Agent(Entity):
     def sum_status(self) -> int:
         total = 0
         for i in range(len(self.status)):
+            if isinstance(self.status[i], str):
+                print(f"Warning: Status effect '{self.status[i]}' is a string. Expected an integer value.")
             total += self.status[i]
         return total
                 
@@ -119,7 +121,7 @@ class Agent(Entity):
             
         for i in range(len(world_objects)):
             if isinstance(world_objects[i], WorldObject):
-                if not world_objects[i].isSolid:
+                if not world_objects[i].is_solid:
                     self.possible_actions.append(Walk.id + i)
                     self.possible_actions.append(Run.id + i)
                 if not isinstance(world_objects[i], Item):
@@ -147,6 +149,8 @@ class Agent(Entity):
                     if action.__name__ == 'Unload' and self.item_in_hand.ammo <= 0:  # type: ignore
                         continue
                     self.possible_actions.append(action.id)
+                    
+        self.possible_actions.sort()
                     
     def print_actions(self, state):
         print("\nPossible Actions:")
@@ -191,6 +195,8 @@ class Agent(Entity):
                     print("Invalid input. Please enter a number.")
                     # return False
         else:
-            choice = random.randint(0, len(self.possible_actions) - 1)
-            state.current_action_id = self.possible_actions[choice]
+            # choice = random.randint(0, len(self.possible_actions) - 1)
+            # state.current_action_id = self.possible_actions[choice]
+            choice = random.randint(0, len(state.all_possible_agent_actions_ids) - 1)
+            state.current_action_id = state.all_possible_agent_actions_ids[choice]
             return True

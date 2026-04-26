@@ -25,6 +25,7 @@ class Walk(Action):     #class for the action of walking 1 tile
             next_position[1] -= 1
         else:
             print("Invalid direction:", entity_direction)
+            print("Current action ID:", state.current_action_id)
             return -100
         #Check if next position is not valid
         if (next_position[0] < 0 or next_position[0] >= len(state.world.grid) or

@@ -1,3 +1,4 @@
+from entities.entity import Entity
 from actions.action import Action
 from world_objects.ground import Ground
 
@@ -57,7 +58,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     target_position[1] < 0 or target_position[1] >= len(state.world.grid[0])):
                     break  # Out of bounds
                 target_cell = state.world.grid[target_position[0]][target_position[1]]
-                if target_cell.__class__.__name__ == "Entity":
+                if isinstance(target_cell, Entity):
                     # apply damage
                     hit = True
                     target_cell.health -= damage

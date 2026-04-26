@@ -1,5 +1,6 @@
 from actions.action import Action
 from items.ammo import Ammo
+from items.item import Item
 from world_objects.ground import Ground
 
 class PickupItem(Action):   #class for picking up items
@@ -8,12 +9,12 @@ class PickupItem(Action):   #class for picking up items
         
     @staticmethod
     def action(state) -> int:
-        if state.agent.standing_on.__class__.__name__ == "Item":
+        if isinstance(state.agent.standing_on, Item):
             item_to_pickup = state.agent.standing_on
             
             # Handle ammo stacking
             if item_to_pickup.__class__.__name__ == "Ammo":
-                ammo_to_pickup = item_to_pickup.ammo_count
+                ammo_to_pickup = item_to_pickup.ammo_count # type: ignore
                 
                 return_value = False
                 

@@ -6,15 +6,17 @@ class Heal(Action):     #class for the action of perceiving the surroundings
 
     @staticmethod
     def action(state) -> int:
-        if(state.agent.item_in_hand.__class__.__name__ == "Medkit"):
-            state.agent.health += state.agent.item_in_hand.heal_amount
+        heal_item = state.agent.item_in_hand
+        if(heal_item.__class__.__name__ == "Medkit"):
+            state.agent.health += heal_item.heal_amount
             if state.agent.health > state.agent.max_health:
                 state.agent.health = state.agent.max_health
-            state.agent.remove_item(state.agent.item_in_hand)
+            state.agent.inventory.remove(heal_item)
+            state.agent.inventory_space_used -= heal_item.inventory_space
             state.agent.item_in_hand = None
             state.agent.status[2] = 0
-            print(f"You used a medkit and healed {state.agent.item_in_hand.heal_amount} health. Current health: {state.agent.health}") # type: ignore
-            return state.agent.item_in_hand.heal_amount / 2 # type: ignore
+            print(f"You used a medkit and healed {heal_item.heal_amount} health. Current health: {state.agent.health}") # type: ignore
+            return heal_item.heal_amount / 2 # type: ignore
         else:
             print("You need to have a medkit in hand to heal.")
             return -100

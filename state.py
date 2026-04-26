@@ -145,7 +145,7 @@ class State:
                 no_valid_action = False
                 if self.agent.choose_action(self) == False:
                     no_valid_action = True
-            self.advance_time()
+            print(f"Reward: {self.advance_time()}") 
             if self.agent.health <= 0:
                 print("Game over")
                 break
@@ -162,6 +162,9 @@ class State:
             WO_position[0] += 1
         elif direction == 3:
             WO_position[1] -= 1
+        if (WO_position[0] < 0 or WO_position[0] >= len(self.world.grid) or
+        WO_position[1] < 0 or WO_position[1] >= len(self.world.grid[0])):
+            return None
         return self.world.grid[WO_position[0]][WO_position[1]]
     
     def advance_time(self) -> int:
@@ -215,8 +218,9 @@ class State:
                 if self.agent.health <= 0:
                     print("You died of thirst.")
                     reward += self.entity_death(self.agent)
-            if self.agent.status[2] == 1:
+            if self.agent.status[2] > 0:
                 self.agent.health -= self.bleeding_damage
+                self.agent.status[2] -= 1
                 print("You are bleeding to death.")
                 if self.agent.health <= 0:
                     print("You died of bleeding.")

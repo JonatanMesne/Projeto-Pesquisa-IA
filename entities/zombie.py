@@ -2,6 +2,7 @@ from entities.entity import Entity
 from actions.update_vision import UpdateVision
 from actions.walk import Walk
 from world_objects.ground import Ground
+from world_objects.world_object import WorldObject
 import random
 
 class Zombie(Entity):
@@ -76,8 +77,8 @@ class Zombie(Entity):
             state.agent.health -= self.damage
             # random_number = random.randint(1, 100)
             random_number = state.world.get_seed_number(2, 100) + 1
-            if random_number <= 20 and "bleeding" not in state.agent.status:
-                state.agent.status.append("bleeding")
+            if random_number <= 20:
+                state.agent.status[2] = 3  # Agent is infected for 3 turns
         else:
             zombie_direction = state.current_action_id
             if not Walk.action(state):
@@ -111,7 +112,7 @@ class Zombie(Entity):
                     max_y = len(state.world.grid[0])
                     if 0 <= new_x < max_x and 0 <= new_y < max_y:
                         object_in_front = state.world.grid[new_x][new_y]
-                        if object_in_front.__class__.__name__ == "WorldObject":
+                        if isinstance(object_in_front, WorldObject) and object_in_front.is_solid:
                             object_in_front.durability -= 1
                             if object_in_front.durability <= 0:
                                 state.world.grid[new_x][new_y] = Ground()

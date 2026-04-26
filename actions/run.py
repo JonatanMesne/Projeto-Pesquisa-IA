@@ -12,10 +12,10 @@ class Run(Action):     #class for the action of running a few tiles
     def action(state) -> int:
         return_value = 0
         if state.agent.status[3] == 0:
+            state.current_action_id = state.current_action_id - 4  # Adjust the action ID to correspond to walking in the same direction
             for _ in range(Run.run_distance):
                 if state.agent.stamina >= 5:
                     state.agent.stamina -= 5
-                    state.current_action_id = state.current_action_id - 4  # Adjust the action ID to correspond to walking in the same direction
                     if Walk.action(state) == 5:
                         return_value += 3
                     else:

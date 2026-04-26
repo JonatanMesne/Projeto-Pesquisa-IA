@@ -22,10 +22,6 @@ class Reload(Action):     #class for the action of reloading a weapon
             for inv_item in state.agent.inventory[:]:
                 if not inv_item.__class__.__name__ == "Ammo":
                     continue
-                if inv_item.ammo_count <= 0:
-                    # remove empty stacks if any
-                    state.agent.remove_item(inv_item)
-                    continue
 
                 take = min(inv_item.ammo_count, needed)
                 weapon.ammo += take
@@ -35,7 +31,8 @@ class Reload(Action):     #class for the action of reloading a weapon
 
                 # remove stack if emptied
                 if inv_item.ammo_count == 0:
-                    state.agent.remove_item(inv_item)
+                    state.agent.inventory.remove(inv_item)
+                    state.agent.inventory_space_used -= inv_item.inventory_space
 
                 if needed == 0:
                     break
