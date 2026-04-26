@@ -3,6 +3,7 @@ from items.ammo import Ammo
 
 class Reload(Action):     #class for the action of reloading a weapon
     duration = 1
+    id = 24
 
     @staticmethod
     def action(state) -> bool:

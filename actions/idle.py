@@ -2,6 +2,7 @@ from actions.action import Action
 
 class Idle(Action):     #class for the action of doing nothing for 1 time unit
     duration = 1
+    id = 0
 
     @staticmethod
     def action(state) -> bool:

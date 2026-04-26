@@ -8,7 +8,6 @@ from items.medkit import Medkit
 from items.weapons.baseball_bat import BaseballBat
 from items.weapons.knife import Knife
 from items.weapons.pistol import Pistol
-from items.weapons.smg import Smg
 
 class Buildings:
     # W W W W W W W W

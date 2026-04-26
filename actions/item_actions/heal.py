@@ -2,6 +2,7 @@ from actions.action import Action
 
 class Heal(Action):     #class for the action of perceiving the surroundings
     duration = 1
+    id = 23
 
     @staticmethod
     def action(state) -> bool:

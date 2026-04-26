@@ -2,6 +2,7 @@ from actions.action import Action
 
 class Eat(Action):     #class for the action of eating food
     duration = 1
+    id = 22
 
     @staticmethod
     def action(state) -> bool:

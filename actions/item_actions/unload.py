@@ -5,6 +5,7 @@ from items.weapons.ranged import RangedWeapon
 
 class Unload(Action):   #class for unloading ammo from the item in hand
     duration = 1
+    id = 25
         
     @staticmethod
     def action(state) -> bool:

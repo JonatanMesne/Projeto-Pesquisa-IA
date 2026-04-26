@@ -4,6 +4,7 @@ from actions.walk import Walk
 class Run(Action):     #class for the action of running a few tiles
     duration = 1
     need_direction = True
+    id = 5  #to 8
     
     run_distance = 3
 
@@ -14,6 +15,7 @@ class Run(Action):     #class for the action of running a few tiles
             for i in range(Run.run_distance):
                 if state.agent.stamina >= 5:
                     state.agent.stamina -= 5
+                    state.current_action_id = state.current_action_id - 4  # Adjust the action ID to correspond to walking in the same direction
                     if Walk.action(state):
                         return_value = True
                     else:

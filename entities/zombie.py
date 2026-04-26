@@ -33,7 +33,7 @@ class Zombie(Entity):
         # Behavior logic for the zombie
         state.action_zombie = self  # Store the zombie in the state for access in actions
         UpdateVision.action(state)  # Update vision data
-        state.entity_direction = 0  # Reset direction
+        state.current_action_id = 0  # Reset direction
         distance_to_agent = [0, 0]
         for i in range(len(self.vision_data)):
             for j in range(len(self.vision_data[i])):
@@ -43,18 +43,18 @@ class Zombie(Entity):
                     distance_to_agent[1] = obj.position[1] - self.position[1]
                     if abs(distance_to_agent[0]) >= abs(distance_to_agent[1]):
                         if distance_to_agent[0] < 0:
-                            state.entity_direction = 1  # up
+                            state.current_action_id = 1  # walk up
                         else:
-                            state.entity_direction = 3  # down
+                            state.current_action_id = 3  # walk down
                     else:
                         if distance_to_agent[1] < 0:
-                            state.entity_direction = 4  # left
+                            state.current_action_id = 4  # walk left
                         else:
-                            state.entity_direction = 2  # right
+                            state.current_action_id = 2  # walk right
                     break
-        if state.entity_direction == 0:
-            # state.entity_direction = random.randint(1, 4)
-            state.entity_direction = state.world.get_seed_number(1, 4) + 1 # Random direction if agent is not in vision
+        if state.current_action_id == 0:
+            # state.current_action_id = random.randint(1, 4)
+            state.current_action_id = state.world.get_seed_number(1, 4) + 1 # Random direction if agent is not in vision
         if abs(distance_to_agent[0]) + abs(distance_to_agent[1]) == 1:
             # Attack the agent
             state.agent.health -= self.damage
@@ -63,19 +63,19 @@ class Zombie(Entity):
             if random_number <= 20 and "bleeding" not in state.agent.status:
                 state.agent.status.append("bleeding")
         else:
-            zombie_direction = state.entity_direction
+            zombie_direction = state.current_action_id
             if not Walk.action(state):
                 if zombie_direction == 1 or zombie_direction == 3:
                     if distance_to_agent[1] < 0:
-                        state.entity_direction = 4  # left
+                        state.current_action_id = 4  # walk left
                     elif distance_to_agent[1] > 0:
-                        state.entity_direction = 2  # right
+                        state.current_action_id = 2  # walk right
                 else:
                     if distance_to_agent[0] < 0:
-                        state.entity_direction = 1  # up
+                        state.current_action_id = 1  # walk up
                     elif distance_to_agent[0] > 0:
-                        state.entity_direction = 3  # down
-                if state.entity_direction == 0 or not Walk.action(state):
+                        state.current_action_id = 3  # walk down
+                if state.current_action_id == 0 or not Walk.action(state):
                     # determine coordinates in front of the zombie based on its original direction
                     if zombie_direction == 1:   # up
                         new_x = self.position[0] - 1

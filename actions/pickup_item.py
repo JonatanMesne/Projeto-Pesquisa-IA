@@ -5,6 +5,7 @@ from world_objects.ground import Ground
 
 class PickupItem(Action):   #class for picking up items
     duration = 1
+    id = 26
         
     @staticmethod
     def action(state) -> bool:

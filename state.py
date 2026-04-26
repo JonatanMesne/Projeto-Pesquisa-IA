@@ -1,18 +1,91 @@
+from actions.idle import Idle
+from actions.walk import Walk
+from actions.run import Run
+from actions.attack import Attack
+from actions.climb import Climb
+from actions.door_action import DoorAction
+from actions.item_actions.drink import Drink
+from actions.item_actions.eat import Eat
+from actions.item_actions.heal import Heal
+from actions.item_actions.reload import Reload
+from actions.item_actions.unload import Unload
+from actions.pickup_item import PickupItem
+from actions.change_held_item import ChangeHeldItem
+from actions.drop_item import DropItem
+from actions.action import Action
+
+from actions.update_vision import UpdateVision
 from entities.agent import Agent
 from entities.zombie import Zombie
-from actions.action import Action
+
 from world import World
 
 class State:
+    all_possible_agent_actions_ids = [
+        0,  #idle
+        1,  #walk up
+        2,  #walk right
+        3,  #walk down
+        4,  #walk left
+        5,  #run up
+        6,  #run right
+        7,  #run down
+        8,  #run left
+        9,  #attack up
+        10,  #attack right
+        11,  #attack down
+        12,  #attack left
+        13,  #climb up
+        14,  #climb right
+        15,  #climb down
+        16,  #climb left
+        17,  #door_action up
+        18,  #door_action right
+        19,  #door_action down
+        20,  #door_action left
+        21,  #drink
+        22,  #eat
+        23,  #heal
+        24,  #reload
+        25,  #unload
+        26  #pickup_item
+    ]
+    for i in range(100, 100 + Agent.max_inventory_space):   #adding change_held_item ids for every inventory slot
+        all_possible_agent_actions_ids.append(i)
+    for i in range(200, 200 + Agent.max_inventory_space):   #adding drop_item ids for every inventory slot
+        all_possible_agent_actions_ids.append(i)
+        
+    all_possible_agent_actions = [
+        Idle, 
+        Walk, 
+        Run, 
+        Attack, 
+        Climb, 
+        DoorAction, 
+        Drink, 
+        Eat, 
+        Heal, 
+        Reload, 
+        Unload, 
+        PickupItem,
+        ChangeHeldItem,
+        DropItem,
+        Action
+    ]
+    
+    def get_action(self, action_id):
+        for i in range(len(self.all_possible_agent_actions)):
+            if self.current_action_id < self.all_possible_agent_actions[i].id:
+                return self.all_possible_agent_actions[i-1]
+        return None #should never reach this
+    
     def __init__(self):
-        self.entity_direction = 0  # 1 (up) | 2 (right) | 3 (down) | 4 (left)
         self.agent: Agent
         self.zombies = []
         self.action_zombie: Zombie | None = None  # Store the current zombie in the state for access in actions
         self.world: World
-        self.current_action: Action | None = None
+        self.current_action_id = -1
         self.time_elapsed = 0
-        self.index = -1
         self.hunger_per_time = 3
         self.thirst_per_time = 3
         self.stamina_per_time = 5
@@ -37,7 +110,7 @@ class State:
         self.zombies = []
         self.action_zombie = None
         self.world = World()
-        self.current_action = None
+        self.current_action_id = -1
         self.time_elapsed = 0
         self.index = -1
         self.wave_count = 0
@@ -58,24 +131,23 @@ class State:
                 break
         print(f"You survived for {self.time_elapsed} time units.")
             
-                    
-            
-    def get_world_object_in_front(self):
+    def get_world_object_in_front(self, direction):
         WO_position = self.agent.position.copy()
-        #direction = 1 (up) | 2 (right) | 3 (down) | 4 (left)
-        if self.entity_direction == 1:
+        #direction = 0 (up) | 1 (right) | 2 (down) | 3 (left)
+        if direction == 0:
             WO_position[0] -= 1
-        elif self.entity_direction == 2:
+        elif direction == 1:
             WO_position[1] += 1
-        elif self.entity_direction == 3:
+        elif direction == 2:
             WO_position[0] += 1
-        elif self.entity_direction == 4:
+        elif direction == 3:
             WO_position[1] -= 1
         return self.world.grid[WO_position[0]][WO_position[1]]
     
     def advance_time(self):
-        action_duration = self.current_action.duration # type: ignore
-        self.current_action.action(self)    # type: ignore
+        current_action = self.get_action(self.current_action_id)
+        action_duration = current_action.duration # type: ignore
+        current_action.action(self) # type: ignore
         for _ in range(action_duration):
             self.time_elapsed += 1
             for zombie in self.zombies:

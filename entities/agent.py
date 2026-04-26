@@ -15,12 +15,13 @@ from actions.pickup_item import PickupItem
 from actions.change_held_item import ChangeHeldItem
 
 class Agent(Entity):
+    max_inventory_space = 10   #max 100
     #construtor
-    def __init__(self, appearence = 'A', health = 100, inventory = [], max_inventory_space = 10, 
+    def __init__(self, appearence = 'A', health = 100, inventory = [], 
                 status = [], vision_range = 6, player_controlled = False):
         super().__init__(appearence, health, vision_range)
         self.inventory = inventory
-        self.max_inventory_space = max_inventory_space
+        self.max_inventory_space = Agent.max_inventory_space 
         self.inventory_space_used = 0
         self.max_stamina = 100
         self.stamina = self.max_stamina
@@ -62,70 +63,83 @@ class Agent(Entity):
         self.possible_actions = []
         
         # standard actions
-        self.possible_actions.append(Idle)
-        self.possible_actions.append(Walk)
-        if "tired" not in self.status:
-            self.possible_actions.append(Run)
-        self.possible_actions.append(Attack)
+        self.possible_actions.append(Idle.id)
+        
+        #world object dependent actions
+        world_objects = []
+        #if up is a valid position
+        if self.position[0] - 1 >= 0:
+            world_objects.append(state.world.grid[self.position[0] - 1][self.position[1]])
+            self.possible_actions.append(Attack.id + 0)
+        else:
+            world_objects.append(None)
+        #if up is a valid position
+        if self.position[1] + 1 < len(state.world.grid[0]):
+            world_objects.append(state.world.grid[self.position[0]][self.position[1] + 1])
+            self.possible_actions.append(Attack.id + 1)
+        else:
+            world_objects.append(None)
+        #if up is a valid position
+        if self.position[0] + 1 < len(state.world.grid):
+            world_objects.append(state.world.grid[self.position[0] + 1][self.position[1]])
+            self.possible_actions.append(Attack.id + 2)
+        else:
+            world_objects.append(None)
+        #if up is a valid position
+        if self.position[1] - 1 >= 0:
+            world_objects.append(state.world.grid[self.position[0]][self.position[1] - 1])
+            self.possible_actions.append(Attack.id + 3)
+        else:
+            world_objects.append(None)
+            
+        for i in range(len(world_objects)):
+            if isinstance(world_objects[i], WorldObject):
+                if not world_objects[i].isSolid:
+                    self.possible_actions.append(Walk.id + i)
+                    self.possible_actions.append(Run.id + i)
+                if not isinstance(world_objects[i], Item):
+                    if world_objects[i].has_action:
+                        if world_objects[i].action.__name__ == 'Climb' and state.agent.stamina <= 10:
+                            continue
+                        self.possible_actions.append(world_objects[i].action.id + i)
+        
+        if isinstance(self.standing_on, Item):
+            self.possible_actions.append(PickupItem.id)
         
         if len(self.inventory) > 0:
             if self.item_in_hand == None:
-                self.possible_actions.append(ChangeHeldItem)    
+                for i in range(len(self.inventory)):
+                    self.possible_actions.append(ChangeHeldItem.id + i)
             elif len(self.inventory) > 1:
-                self.possible_actions.append(ChangeHeldItem)
-            self.possible_actions.append(DropItem)
-            
-        
-        #world object actions
-        world_objects = []
-        if self.position[0] - 1 >= 0:
-            world_objects.append(state.world.grid[self.position[0] - 1][self.position[1]])
-        else:
-            world_objects.append(None)
-        if self.position[1] + 1 < len(state.world.grid[0]):
-            world_objects.append(state.world.grid[self.position[0]][self.position[1] + 1])
-        else:
-            world_objects.append(None)
-        if self.position[0] + 1 < len(state.world.grid):
-            world_objects.append(state.world.grid[self.position[0] + 1][self.position[1]])
-        else:
-            world_objects.append(None)
-        if self.position[1] - 1 >= 0:
-            world_objects.append(state.world.grid[self.position[0]][self.position[1] - 1])
-        else:
-            world_objects.append(None)
-        for i in range(len(world_objects)):
-            if isinstance(world_objects[i], WorldObject) and not isinstance(world_objects[i], Item):
-                if world_objects[i].has_action:
-                    if world_objects[i].action.__name__ == 'Climb' and state.agent.stamina <= 10:
-                        continue
-                    self.possible_actions.append([world_objects[i].action, i+1])
-                    
-        if isinstance(self.standing_on, Item):
-            self.possible_actions.append(PickupItem)
+                for i in range(len(self.inventory)):
+                    self.possible_actions.append(ChangeHeldItem.id + i)
+            for i in range(len(self.inventory)):
+                self.possible_actions.append(DropItem.id + i)
             
         if self.item_in_hand != None:
             if self.item_in_hand.has_action: 
                 for action in self.item_in_hand.action:  # type: ignore
                     if action.__name__ == 'Unload' and self.item_in_hand.ammo <= 0:  # type: ignore
                         continue
-                    self.possible_actions.append(action)
+                    self.possible_actions.append(action.id)
                     
-    def print_actions(self):
+    def print_actions(self, state):
         print("\nPossible Actions:")
         for i in range(len(self.possible_actions)):
-            action = self.possible_actions[i]
-            if isinstance(action, list):
+            action = state.get_action(self.possible_actions[i])
+            if action.need_direction:
                 direction = ""
-                if action[1] == 1:
+                if self.possible_actions[i] - action.id == 0:
                     direction = "Up"
-                elif action[1] == 2:
+                elif self.possible_actions[i] - action.id == 1:
                     direction = "Right"
-                elif action[1] == 3:
+                elif self.possible_actions[i] - action.id == 2:
                     direction = "Down"
-                elif action[1] == 4:
+                elif self.possible_actions[i] - action.id == 3:
                     direction = "Left"
-                print(f"{i}- {action[0].__name__} (Direction: {direction})")
+                print(f"{i}- {action.__name__} (Direction: {direction})")
+            elif action.need_index:
+                print(f"{i}- {action.__name__} (Index: {self.possible_actions[i] - action.id})")
             else:
                 print(f"{i}- {action.__name__}")
                 
@@ -135,7 +149,7 @@ class Agent(Entity):
         self.print_status(state)
         self.print_inventory()
         self.update_possible_actions(state)
-        self.print_actions()
+        self.print_actions(state)
         
     def choose_action(self, state) -> bool:
         self.print_agent_info(state)
@@ -146,47 +160,13 @@ class Agent(Entity):
                     if choice < 0 or choice >= len(self.possible_actions):
                         print("Invalid choice. Please enter a valid number.")
                     else:
-                        if isinstance(self.possible_actions[choice], list):
-                            state.current_action = self.possible_actions[choice][0]
-                            if state.current_action.need_direction:
-                                state.entity_direction = self.possible_actions[choice][1]
-                            if state.current_action.need_index:
-                                state.index = self.possible_actions[choice][1]
-                        else:
-                            state.current_action = self.possible_actions[choice]
-                            if state.current_action.need_direction:
-                                direction_choice = int(input("\nEnter the direction (1-Up, 2-Right, 3-Down, 4-Left): "))
-                                if direction_choice < 1 or direction_choice > 4:
-                                    print("Invalid direction. Please enter a valid number.")
-                                    continue
-                                else:
-                                    state.entity_direction = direction_choice
-                            if state.current_action.need_index:
-                                index_choice = int(input("\nEnter the index: "))
-                                if index_choice < 0:
-                                    print("Invalid index. Please enter a valid number.")
-                                    continue
-                                else:
-                                    state.index = index_choice
+                        state.current_action_id = self.possible_actions[choice]
                     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
                     return True
                 except ValueError:
                     print("Invalid input. Please enter a number.")
-                    return False
+                    # return False
         else:
             choice = random.randint(0, len(self.possible_actions) - 1)
-            if isinstance(self.possible_actions[choice], list):
-                state.current_action = self.possible_actions[choice][0]
-                if state.current_action.need_direction:
-                    state.entity_direction = self.possible_actions[choice][1]
-                if state.current_action.need_index:
-                    state.index = self.possible_actions[choice][1]
-            else:
-                state.current_action = self.possible_actions[choice]
-                if state.current_action.need_direction:
-                    direction_choice = random.randint(1, 4)
-                    state.entity_direction = direction_choice
-                if state.current_action.need_index:
-                    index_choice = random.randint(0, len(self.inventory) - 1)
-                    state.index = index_choice
+            state.current_action_id = self.possible_actions[choice]
             return True

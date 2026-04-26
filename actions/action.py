@@ -4,6 +4,7 @@ class Action():
     duration = 0
     need_direction = False
     need_index = False
+    id = 999
         
     @staticmethod
     @abstractmethod

@@ -2,6 +2,7 @@ from actions.action import Action
 
 class UpdateVision(Action):     #class for the action of perceiving the surroundings
     duration = 0
+    id = -1
 
     @staticmethod
     def action(state) -> bool:

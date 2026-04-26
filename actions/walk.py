@@ -3,26 +3,28 @@ from actions.action import Action
 class Walk(Action):     #class for the action of walking 1 tile
     duration = 1
     need_direction = True
+    id = 1  #to 4
 
     @staticmethod
     def action(state) -> bool:
+        entity_direction = state.current_action_id - Walk.id  # Calculate direction based on action ID
         if state.action_zombie is not None:
             entity = state.action_zombie
         else:
             entity = state.agent
         next_position = entity.position.copy()
-        # print("Attempting to walk in direction:", state.entity_direction)
-        #direction = 1 (up) | 2 (right) | 3 (down) | 4 (left)
-        if state.entity_direction == 1:
+        # print("Attempting to walk in direction:", entity_direction)
+        #direction = 0 (up) | 1 (right) | 2 (down) | 3 (left)
+        if entity_direction == 0:
             next_position[0] -= 1
-        elif state.entity_direction == 2:
+        elif entity_direction == 1:
             next_position[1] += 1
-        elif state.entity_direction == 3:
+        elif entity_direction == 2:
             next_position[0] += 1
-        elif state.entity_direction == 4:
+        elif entity_direction == 3:
             next_position[1] -= 1
         else:
-            print("Invalid direction:", state.entity_direction)
+            print("Invalid direction:", entity_direction)
             return False
         #Check if next position is valid
         if (next_position[0] < 0 or next_position[0] >= len(state.world.grid) or

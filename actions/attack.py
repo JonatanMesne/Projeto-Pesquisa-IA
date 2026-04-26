@@ -7,11 +7,13 @@ from world_objects.ground import Ground
 class Attack(Action):     #class for the action of perceiving the surroundings
     duration = 1
     need_direction = True
+    id = 9  #to 12
 
     @staticmethod
     def action(state) -> bool:
         hit = False
         damage_total = 0           # keep track of total damage dealt
+        entity_direction = state.current_action_id - Attack.id  # Calculate direction based on action ID
 
         if not isinstance(state.agent.item_in_hand, (MeleeWeapon, RangedWeapon)):
             pierce = 99
@@ -36,13 +38,14 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                 knockback = state.agent.item_in_hand.knockback
 
         direction_array = [0, 0]
-        if state.entity_direction == 1:
+        #direction = 0 (up) | 1 (right) | 2 (down) | 3 (left)
+        if entity_direction == 0:
             direction_array[0] -= 1
-        elif state.entity_direction == 2:
+        elif entity_direction == 1:
             direction_array[1] += 1
-        elif state.entity_direction == 3:
+        elif entity_direction == 2:
             direction_array[0] += 1
-        elif state.entity_direction == 4:
+        elif entity_direction == 3:
             direction_array[1] -= 1
 
         for _ in range(fire_rate):
