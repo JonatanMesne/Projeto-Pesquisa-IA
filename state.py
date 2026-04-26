@@ -17,7 +17,8 @@ from actions.action import Action
 from actions.update_vision import UpdateVision
 from entities.agent import Agent
 from entities.zombie import Zombie
-
+from actions.action import Action
+from actions.update_vision import UpdateVision
 from world import World
 
 class State:
@@ -82,6 +83,7 @@ class State:
     def __init__(self):
         self.agent: Agent
         self.zombies = []
+        # self.zombies_vectors = []
         self.action_zombie: Zombie | None = None  # Store the current zombie in the state for access in actions
         self.world: World
         self.current_action_id = -1
@@ -97,6 +99,23 @@ class State:
         self.wave_count = 0
         self.time_limit = 1000
         self.zombies_killed = 0
+        self.vector = []
+        # self.vector = [self.agent.vector, self.world.vector, self.time_elapsed, self.hunger_per_time, self.thirst_per_time,
+        #                self.stamina_per_time, self.hunger_damage, self.thirst_damage, self.bleeding_damage,
+        #                self.hunger_threshold, self.thirst_threshold, self.wave_count, self.time_limit, self.zombies_killed,
+        #                self.zombies_vectors]
+
+    def update_vector(self):
+        self.agent.update_vector()
+        self.zombies_vectors = []
+        for zombie in self.zombies:
+            zombie.update_vector()
+            self.zombies_vectors.append(zombie.vector)
+        self.world.update_vector()
+        self.vector = [self.agent.vector, self.world.vector, self.time_elapsed, self.hunger_per_time, self.thirst_per_time,
+                       self.stamina_per_time, self.hunger_damage, self.thirst_damage, self.bleeding_damage,
+                       self.hunger_threshold, self.thirst_threshold, self.wave_count, self.time_limit, self.zombies_killed]
+        # self.vector.append(self.zombies_vectors)
         
     def print_self(self):
         print("Agent Direction:", self.entity_direction)
@@ -121,6 +140,7 @@ class State:
     def environment_start(self):
         while self.time_elapsed < self.time_limit:
             no_valid_action = True
+            UpdateVision().action(self)
             while no_valid_action:
                 no_valid_action = False
                 if self.agent.choose_action(self) == False:
@@ -197,7 +217,6 @@ class State:
                 self.world.generate_wave(self)
         
     def entity_death(self, entity):
+        if entity.__class__.__name__ == "Zombie":
+            entity.zombie_death(self)
         self.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
-        if isinstance(entity, Zombie):
-            self.zombies.remove(entity)
-            self.zombies_killed += 1

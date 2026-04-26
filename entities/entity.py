@@ -2,15 +2,18 @@ from abc import ABC
 from world_objects.world_object import WorldObject
 
 class Entity(ABC):
+    id = 0
     #construtor
     def __init__(self, appearence, health, vision_range):
         self.appearence = appearence
         self.health = health
         self.vision_range = vision_range
         self.vision_data = []
+        self.id_vision_data = []
         self.standing_on: WorldObject #tile type where the agent is currently located (i.e. ground, item, etc)
         self.position = [-1, -1] #agent's position in the world grid
         self.is_solid = True
+        # self.vector = [self.health, self.id_vision_data, self.position, self.standing_on.id]
         
     def print_vision_data(self):
         print("\nVision Data:")

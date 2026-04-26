@@ -11,6 +11,7 @@ class UpdateVision(Action):     #class for the action of perceiving the surround
         else:
             entity = state.agent
         vision_data = []
+        id_vision_data = []
         check_pos = entity.position.copy()
         vision_range = entity.vision_range
         lost_vision = [0, 0]
@@ -27,6 +28,7 @@ class UpdateVision(Action):     #class for the action of perceiving the surround
 
         for i in range(vision_range * 2 + 1 + lost_vision[0]):
             vision_data.append([])
+            id_vision_data.append([])
             for j in range(vision_range * 2 + 1 + lost_vision[1]):
                 current_pos = [check_pos[0] + i, check_pos[1] + j]
                 if (current_pos[0] >= len(state.world.grid) or
@@ -34,6 +36,8 @@ class UpdateVision(Action):     #class for the action of perceiving the surround
                     break
                 else:
                     vision_data[i].append(state.world.grid[current_pos[0]][current_pos[1]])
+                    id_vision_data[i].append(state.world.id_grid[current_pos[0]][current_pos[1]])
 
         entity.vision_data = vision_data
+        entity.id_vision_data = id_vision_data
         return True

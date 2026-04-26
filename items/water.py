@@ -2,6 +2,7 @@ from items.item import Item
 from actions.item_actions.drink import Drink
 
 class Water(Item):
+    id = 21
     def __init__(self):
         super().__init__(appearence='w', action=[Drink], inventory_space=1)
         self.thirst_satiation = 40

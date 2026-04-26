@@ -1,7 +1,4 @@
 from actions.action import Action
-from items.weapons.ranged import RangedWeapon
-from items.weapons.melee import MeleeWeapon
-from entities.entity import Entity
 from world_objects.ground import Ground
 
 class Attack(Action):     #class for the action of perceiving the surroundings
@@ -15,7 +12,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
         damage_total = 0           # keep track of total damage dealt
         entity_direction = state.current_action_id - Attack.id  # Calculate direction based on action ID
 
-        if not isinstance(state.agent.item_in_hand, (MeleeWeapon, RangedWeapon)):
+        if not state.agent.item_in_hand.__class__.__name__ in ("MeleeWeapon", "RangedWeapon"):
             pierce = 99
             fire_rate = 1
             damage = 5
@@ -24,7 +21,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
         else:
             weapon_range = state.agent.item_in_hand.range
             damage = state.agent.item_in_hand.damage
-            if isinstance(state.agent.item_in_hand, RangedWeapon):
+            if state.agent.item_in_hand.__class__.__name__ == "RangedWeapon":
                 if state.agent.item_in_hand.ammo > 0:
                     pierce = state.agent.item_in_hand.pierce
                     fire_rate = state.agent.item_in_hand.fire_rate
@@ -51,7 +48,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
         for _ in range(fire_rate):
             # track entities hit this shot (in order from nearest to farthest)
             hits = []  # list of (entity, position)
-            if isinstance(state.agent.item_in_hand, RangedWeapon):
+            if state.agent.item_in_hand.__class__.__name__ == "RangedWeapon":
                 state.agent.item_in_hand.ammo -= 1
             for j in range(weapon_range):
                 target_position = [state.agent.position[0] + direction_array[0] * (j + 1), 
@@ -60,7 +57,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     target_position[1] < 0 or target_position[1] >= len(state.world.grid[0])):
                     break  # Out of bounds
                 target_cell = state.world.grid[target_position[0]][target_position[1]]
-                if isinstance(target_cell, Entity):
+                if target_cell.__class__.__name__ == "Entity":
                     # apply damage
                     hit = True
                     target_cell.health -= damage
@@ -83,6 +80,8 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     damage_total += dmg
                     if target_cell.durability <= 0:
                         state.world.grid[target_position[0]][target_position[1]] = Ground()  # Replace with a passable ground tile
+                        state.world.id_grid[target_position[0]][target_position[1]] = Ground().id
+                        print("You destroyed a wall!")
                     break  # Hit a wall, stop checking further
 
             # apply knockback for this shot's hits, from farthest to nearest
@@ -102,6 +101,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                             break
                         # move entity: set current cell to its standing_on, place entity in new cell
                         state.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
+                        state.world.id_grid[entity.position[0]][entity.position[1]] = entity.standing_on.id
                         entity.place_entity(state.world.grid, [new_x, new_y])  # Update entity's position on the grid
 
         if not hit:

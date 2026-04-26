@@ -5,8 +5,6 @@ from actions.idle import Idle
 from actions.run import Run
 from actions.update_vision import UpdateVision
 from entities.entity import Entity
-from items.weapons.melee import MeleeWeapon
-from items.weapons.ranged import RangedWeapon
 from world_objects.world_object import WorldObject
 from items.item import Item
 from actions.walk import Walk
@@ -15,13 +13,16 @@ from actions.pickup_item import PickupItem
 from actions.change_held_item import ChangeHeldItem
 
 class Agent(Entity):
-    max_inventory_space = 10   #max 100
+    id = 1
+    max_inventory_space = 10
+    possible_status_effects = ["thirsty", "hungry", "tired", "bleeding"]
     #construtor
     def __init__(self, appearence = 'A', health = 100, inventory = [], 
-                status = [], vision_range = 6, player_controlled = False):
+                status = [0, 0, 0, 0], vision_range = 6, player_controlled = False):
         super().__init__(appearence, health, vision_range)
         self.inventory = inventory
-        self.max_inventory_space = Agent.max_inventory_space 
+        self.id_inventory = []
+        self.max_inventory_space = Agent.max_inventory_space
         self.inventory_space_used = 0
         self.max_stamina = 100
         self.stamina = self.max_stamina
@@ -34,19 +35,43 @@ class Agent(Entity):
         self.item_in_hand = None
         self.player_controlled = player_controlled
         self.possible_actions = []
+        
+    vector = []
+    # self.vector = [self.id_vision_data, self.position, self.standing_on.id, self.health, self.max_health, self.stamina, self.max_stamina, 
+    #                self.hunger, self.max_hunger, self.thirst, self.max_thirst, self.status, self.id_inventory, self.inventory_space_used, 
+    #                self.max_inventory_space, self.item_in_hand.id if self.item_in_hand else -1, self.possible_actions]
+
+    def update_vector(self):
+        self.vector = [self.id_vision_data, self.position, self.standing_on.id, self.health, self.max_health, self.stamina, self.max_stamina, 
+                        self.hunger, self.max_hunger, self.thirst, self.max_thirst, self.status, self.id_inventory, self.inventory_space_used, 
+                        self.max_inventory_space, self.item_in_hand.id if self.item_in_hand else -1, self.possible_actions]
+        
+    def sum_status(self) -> int:
+        total = 0
+        for i in range(len(self.status)):
+            total += self.status[i]
+        return total
                 
     def print_status(self, state):
         print(f"\nHealth: {self.health}/{self.max_health}")
         print(f"Stamina: {self.stamina}/{self.max_stamina} + {state.stamina_per_time} per time unit, if not hungry or thirsty")
         print(f"Hunger: {self.hunger}/{self.max_hunger} + {state.hunger_per_time} per time unit")
         print(f"Thirst: {self.thirst}/{self.max_thirst} + {state.thirst_per_time} per time unit")
-        if len(self.status) > 0:
-            print(f"Status Effects: {', '.join(self.status)}")
+        if self.sum_status() > 0:
+            print(f"Status Effects: ")
+            if self.status[0] > 0:
+                print(f"- Thirsty (Decreases stamina regeneration)")
+            if self.status[1] > 0:
+                print(f"- Hungry (Decreases stamina regeneration)")
+            if self.status[2] > 0:
+                print(f"- Tired (Cannot run or climb)")
+            if self.status[3] > 0:
+                print(f"- Bleeding (Loses health over time)")
         else:
             print("Status Effects: None")
         print(f"Inventory Space Used: {self.inventory_space_used}/{self.max_inventory_space}")
-        if isinstance(self.item_in_hand, RangedWeapon) or isinstance(self.item_in_hand, MeleeWeapon):
-            print(f"Item in Hand: {self.item_in_hand.detailed_item_info()}")
+        if self.item_in_hand.__class__.__name__ == 'RangedWeapon' or self.item_in_hand.__class__.__name__ == 'MeleeWeapon':
+            print(f"Item in Hand: {self.item_in_hand.detailed_item_info()}") # type: ignore
         else:
             print(f"Item in Hand: {self.item_in_hand.item_info() if self.item_in_hand else 'None'}")
         
@@ -144,7 +169,6 @@ class Agent(Entity):
                 print(f"{i}- {action.__name__}")
                 
     def print_agent_info(self, state):
-        UpdateVision().action(state)
         self.print_vision_data()
         self.print_status(state)
         self.print_inventory()
