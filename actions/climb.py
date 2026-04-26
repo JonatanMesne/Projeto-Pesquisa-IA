@@ -7,8 +7,8 @@ class Climb(Action):     #class for the action of climbing a small wall
     id = 13 #to 16
 
     @staticmethod
-    def action(state) -> bool:
-        if state.agent.stamina > 10 and "tired" not in state.agent.status:
+    def action(state) -> int:
+        if state.agent.stamina > 10 and state.agent.status[3] == 0:
             direction = state.current_action_id - Climb.id  # Calculate direction based on action ID
             world_object = state.get_world_object_in_front(direction)
             if world_object.action.__name__ == 'Climb':
@@ -18,6 +18,6 @@ class Climb(Action):     #class for the action of climbing a small wall
                 world_object.is_solid = True
                 state.agent.stamina -= 10
                 print("You climbed over the obstacle.")
-                return True
+                return 5
         print("Climb failed: not enough stamina or no climbable object in front.")
-        return False
+        return -100

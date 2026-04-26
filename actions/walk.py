@@ -6,7 +6,7 @@ class Walk(Action):     #class for the action of walking 1 tile
     id = 1  #to 4
 
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         entity_direction = state.current_action_id - Walk.id  # Calculate direction based on action ID
         if state.action_zombie is not None:
             entity = state.action_zombie
@@ -25,13 +25,13 @@ class Walk(Action):     #class for the action of walking 1 tile
             next_position[1] -= 1
         else:
             print("Invalid direction:", entity_direction)
-            return False
+            return -100
         #Check if next position is not valid
         if (next_position[0] < 0 or next_position[0] >= len(state.world.grid) or
             next_position[1] < 0 or next_position[1] >= len(state.world.grid[0]) or 
             (state.world.grid[next_position[0]][next_position[1]].is_solid and not entity.standing_on.is_solid)):
             # print("Invalid move to position:", next_position)
-            return False
+            return -100
         #Move entity to next position, restoring the ground it was standing on and updating where the entity is standing
         state.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
         state.world.id_grid[entity.position[0]][entity.position[1]] = entity.standing_on.id
@@ -40,5 +40,5 @@ class Walk(Action):     #class for the action of walking 1 tile
         state.world.id_grid[next_position[0]][next_position[1]] = entity.id
         entity.position = next_position
         # print("Walked to position:", entity.position)
-        return True
+        return 5
         

@@ -7,7 +7,7 @@ class Unload(Action):   #class for unloading ammo from the item in hand
     id = 25
         
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         if(state.agent.item_in_hand.__class__.__name__ == "RangedWeapon"):
             weapon = state.agent.item_in_hand
             if weapon.__class__.__name__ == "RangedWeapon":
@@ -23,6 +23,6 @@ class Unload(Action):   #class for unloading ammo from the item in hand
                     else:
                         weapon.ammo = 0
                     state.agent.standing_on = previous_ground
-                    return True
+                    return 0
             print("No ammo to unload or item in hand is not a ranged weapon.")
-        return False
+        return -100

@@ -6,7 +6,7 @@ class DoorAction(Action):   #class for opening and closing doors
     id = 17 #to 20
         
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         direction = state.current_action_id - DoorAction.id  # Calculate direction based on action ID
         world_object = state.get_world_object_in_front(direction)
         if world_object.action.__name__ == 'DoorAction':
@@ -22,7 +22,7 @@ class DoorAction(Action):   #class for opening and closing doors
                 world_object.id = 14  #Change ID back to represent closed door
                 state.world.id_grid[world_object.position[0]][world_object.position[1]] = world_object.id  #Update the world's ID grid to reflect the door's new state
             print(f"You {'opened' if not world_object.is_solid else 'closed'} the door.")
-            return True
+            return 0
         else:
             print("There is no door in that direction.")
-            return False
+            return -100

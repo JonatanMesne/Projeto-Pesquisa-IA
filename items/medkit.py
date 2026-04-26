@@ -5,7 +5,7 @@ class Medkit(Item):
     id = 24
     def __init__(self):
         super().__init__(appearence='m', action=[Heal], inventory_space=2)
-        self.heal_amount = 5
+        self.heal_amount = 30
         
     def item_info(self) -> str:
         return f"Medkit: Heals {self.heal_amount} health | Inventory Space: {self.inventory_space}"

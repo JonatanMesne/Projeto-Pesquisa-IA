@@ -9,25 +9,25 @@ class Run(Action):     #class for the action of running a few tiles
     run_distance = 3
 
     @staticmethod
-    def action(state) -> bool:
-        return_value = False
-        if "tired" not in state.agent.status:
-            for i in range(Run.run_distance):
+    def action(state) -> int:
+        return_value = 0
+        if state.agent.status[3] == 0:
+            for _ in range(Run.run_distance):
                 if state.agent.stamina >= 5:
                     state.agent.stamina -= 5
                     state.current_action_id = state.current_action_id - 4  # Adjust the action ID to correspond to walking in the same direction
-                    if Walk.action(state):
-                        return_value = True
+                    if Walk.action(state) == 5:
+                        return_value += 3
                     else:
-                        if return_value:
-                            print(f"You ran {i} tiles before being stopped.")
                         break
                 else:
-                    if return_value:
-                        print(f"You ran {i} tiles before being stopped.")
                     break
-        if return_value:
-            print(f"You ran 3 tiles before being stopped.")
+        if return_value > 0:
+            if return_value // 3 < Run.run_distance:
+                print(f"You ran {return_value // 3} tile{'s' if return_value > 1 else ''} before getting too tired or hitting a solid object.")
+            else:
+                print(f"You ran {Run.run_distance} tiles.")
+            return return_value
         else:
             print("You are too tired to run or hit a solid object.")
-        return return_value
+            return -100

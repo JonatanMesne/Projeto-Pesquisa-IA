@@ -5,7 +5,7 @@ class Idle(Action):     #class for the action of doing nothing for 1 time unit
     id = 0
 
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         state.agent.stamina = min(state.agent.stamina + 20, state.agent.max_stamina)
         print("You take a moment to rest and recover stamina.")
-        return True
+        return 5

@@ -76,7 +76,7 @@ class State:
     
     def get_action(self, action_id):
         for i in range(len(self.all_possible_agent_actions)):
-            if self.current_action_id < self.all_possible_agent_actions[i].id:
+            if action_id < self.all_possible_agent_actions[i].id:
                 return self.all_possible_agent_actions[i-1]
         return None #should never reach this
     
@@ -88,8 +88,8 @@ class State:
         self.world: World
         self.current_action_id = -1
         self.time_elapsed = 0
-        self.hunger_per_time = 3
-        self.thirst_per_time = 3
+        self.hunger_per_time = 1
+        self.thirst_per_time = 1
         self.stamina_per_time = 5
         self.hunger_damage = 3
         self.thirst_damage = 3
@@ -164,59 +164,85 @@ class State:
             WO_position[1] -= 1
         return self.world.grid[WO_position[0]][WO_position[1]]
     
-    def advance_time(self):
+    def advance_time(self) -> int:
+        reward = 0
         current_action = self.get_action(self.current_action_id)
         action_duration = current_action.duration # type: ignore
-        current_action.action(self) # type: ignore
+        reward = current_action.action(self) # type: ignore
+        if reward == -100:
+            return reward       #?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????/
+        
+        oldAgentHealth = self.agent.health
+        oldZombiesKilled = self.zombies_killed
+        
         for _ in range(action_duration):
             self.time_elapsed += 1
             for zombie in self.zombies:
                 zombie.zombie_action(self)
             if self.agent.health <= 0:
                 print("You died of a zombie attack.")
-                break
+                reward += self.entity_death(self.agent)
                 
             #status handler (status, hunger, thirst)
             self.agent.hunger = min(self.agent.max_hunger, self.agent.hunger + self.hunger_per_time)
             self.agent.thirst = min(self.agent.max_thirst, self.agent.thirst + self.thirst_per_time)
             #apply status, then check if status is done, then add new status
-            if self.agent.hunger >= self.hunger_threshold and "hungry" not in self.agent.status:
-                self.agent.status.append("hungry")
-            if self.agent.thirst >= self.thirst_threshold and "thirsty" not in self.agent.status:
-                self.agent.status.append("thirsty")
-            if self.agent.stamina <= 0 and "tired" not in self.agent.status:
-                self.agent.status.append("tired")
+            # agentStatus = [
+            #     0, thirsty
+            #     0, hungry
+            #     0, bleeding
+            #     0  tired
+            # ]
+            if self.agent.hunger >= self.hunger_threshold:
+                self.agent.status[1] = 1
+            if self.agent.thirst >= self.thirst_threshold:
+                self.agent.status[0] = 1
+            if self.agent.stamina <= 0:
+                self.agent.status[3] = 1
                 
-            if "hungry" not in self.agent.status and "thirsty" not in self.agent.status:
+            if self.agent.status[0] == 0 and self.agent.status[1] == 0:
                 self.agent.stamina = min(self.agent.max_stamina, self.agent.stamina + self.stamina_per_time)
                 
-            if "hungry" in self.agent.status:
+            if self.agent.status[1] == 1:
                 self.agent.health -= self.hunger_damage
                 print("You are dying of hunger.")
                 if self.agent.health <= 0:
                     print("You died of hunger.")
-                    break
-            if "thirsty" in self.agent.status:
+                    reward += self.entity_death(self.agent)
+            if self.agent.status[0] == 1:
                 self.agent.health -= self.thirst_damage
                 print("You are dying of thirst.")
                 if self.agent.health <= 0:
                     print("You died of thirst.")
-                    break
-            if "bleeding" in self.agent.status:
+                    reward += self.entity_death(self.agent)
+            if self.agent.status[2] == 1:
                 self.agent.health -= self.bleeding_damage
                 print("You are bleeding to death.")
                 if self.agent.health <= 0:
                     print("You died of bleeding.")
-                    break
-            if "tired" in self.agent.status and self.agent.stamina > 30:
-                self.agent.status.remove("tired")
+                    reward += self.entity_death(self.agent)
+            if self.agent.stamina > 30:
+                self.agent.status[3] = 0
             
             #wave handler
             if len(self.zombies) < self.world.wave_size * self.wave_count * 0.2:
                 self.wave_count += 1
                 self.world.generate_wave(self)
+                
+        reward += (self.agent.health - oldAgentHealth) * 0.5
+        reward += (self.zombies_killed - oldZombiesKilled) * 10
+        reward -= self.agent.status[0] * 10  #thirsty
+        reward -= self.agent.status[1] * 10  #hungry
+        reward -= self.agent.status[2] * 20  #bleeding
+        reward -= self.agent.status[3] * 5  #tired
+        return reward
         
-    def entity_death(self, entity):
+    def entity_death(self, entity) -> int:
         if entity.__class__.__name__ == "Zombie":
             entity.zombie_death(self)
-        self.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
+            self.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
+            return 0
+        elif entity.__class__.__name__ == "Agent":
+            return -1000
+        return 1
+        

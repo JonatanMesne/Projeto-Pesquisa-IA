@@ -6,7 +6,7 @@ class DropItem(Action):     #class for the action of dropping an item from the a
     id = 200 #to 200 + agent_inventory
 
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         index = state.current_action_id - DropItem.id  # Calculate index based on action ID
         item_dropped = state.agent.inventory[index] if index >= 0 and index < len(state.agent.inventory) else None
         if item_dropped is not None:
@@ -19,6 +19,6 @@ class DropItem(Action):     #class for the action of dropping an item from the a
             state.agent.inventory_space_used -= item_dropped.inventory_space
             state.agent.inventory.pop(index)
             print(f"You dropped: {item_dropped.__class__.__name__}")
-            return True
+            return 0
         print("Invalid index. No item dropped.")
-        return False
+        return -100

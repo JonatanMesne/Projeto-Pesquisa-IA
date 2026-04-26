@@ -8,5 +8,5 @@ class Action():
         
     @staticmethod
     @abstractmethod
-    def action(state) -> bool: #passes the state and agent as parameters   | returns True if action was successful, False otherwise
+    def action(state) -> int: #passes the state and agent as parameters   | returns True if action was successful, False otherwise
         pass

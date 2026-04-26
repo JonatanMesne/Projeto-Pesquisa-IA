@@ -5,7 +5,7 @@ class UpdateVision(Action):     #class for the action of perceiving the surround
     id = -1
 
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         if state.action_zombie is not None:
             entity = state.action_zombie
         else:
@@ -40,4 +40,4 @@ class UpdateVision(Action):     #class for the action of perceiving the surround
 
         entity.vision_data = vision_data
         entity.id_vision_data = id_vision_data
-        return True
+        return 0

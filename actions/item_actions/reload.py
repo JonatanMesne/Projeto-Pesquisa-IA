@@ -5,7 +5,7 @@ class Reload(Action):     #class for the action of reloading a weapon
     id = 24
 
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         if(state.agent.item_in_hand.__class__.__name__ == "RangedWeapon"):
             # Must have a ranged weapon in hand
             weapon = state.agent.item_in_hand
@@ -14,7 +14,7 @@ class Reload(Action):     #class for the action of reloading a weapon
             needed = weapon.ammo_capacity - weapon.ammo
             if needed <= 0:
                 print("Your weapon is already fully loaded.")
-                return False
+                return -100
 
             transferred = 0
 
@@ -42,10 +42,10 @@ class Reload(Action):     #class for the action of reloading a weapon
 
             if transferred > 0:
                 print(f"You reloaded your {weapon.__class__.__name__} with {transferred} ammo. Current ammo: {weapon.ammo}/{weapon.ammo_capacity}")
-                return True
+                return 10
 
             print("You don't have any ammo to reload your weapon.")
-            return False
+            return -100
         else:
             print("You need to have a ranged weapon in hand to reload.")
-            return False
+            return -100

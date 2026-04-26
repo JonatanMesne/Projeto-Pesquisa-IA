@@ -6,15 +6,15 @@ class ChangeHeldItem(Action):     #class for the action of changing the item in 
     id = 100 #to 100 + agent_inventory
 
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         index = state.current_action_id - ChangeHeldItem.id  # Calculate index based on action ID
         if index == 0:  # If index is 0, the agent wants to empty their hands
             state.agent.item_in_hand = None
             print("You removed the item from your hands.")
-            return True
+            return 0
         if index >= 1 and index < len(state.agent.inventory) + 1:
             state.agent.item_in_hand = state.agent.inventory[index-1]  # Set the item in hand to the selected inventory item
             print(f"You are now holding: {state.agent.item_in_hand.__class__.__name__}")
-            return True
+            return 0
         print("Invalid index. No item in hand.")
-        return False
+        return -100

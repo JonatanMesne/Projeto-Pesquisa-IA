@@ -7,7 +7,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
     id = 9  #to 12
 
     @staticmethod
-    def action(state) -> bool:
+    def action(state) -> int:
         hit = False
         damage_total = 0           # keep track of total damage dealt
         entity_direction = state.current_action_id - Attack.id  # Calculate direction based on action ID
@@ -28,7 +28,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     knockback = 0
                 else:
                     print("Attack failed: no ammo.")
-                    return False  # No ammo, cannot attack
+                    return -100  # No ammo, cannot attack
             else:
                 pierce = 99
                 fire_rate = 1
@@ -76,6 +76,8 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                 if target_cell.is_solid:
                     hit = True
                     dmg = damage // 4  # Walls take reduced damage
+                    if dmg <= 0:
+                        dmg = 1  # Ensure at least 1 damage is dealt to walls
                     target_cell.durability -= dmg
                     damage_total += dmg
                     if target_cell.durability <= 0:
@@ -106,7 +108,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
 
         if not hit:
             print("Your attack missed.")
-            return False
+            return -100
 
         print(f"You dealt {damage_total} total damage.")
-        return True
+        return damage_total * 5
