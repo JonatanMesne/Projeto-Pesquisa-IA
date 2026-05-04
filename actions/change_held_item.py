@@ -10,11 +10,18 @@ class ChangeHeldItem(Action):     #class for the action of changing the item in 
         index = state.current_action_id - ChangeHeldItem.id  # Calculate index based on action ID
         if index == 0:  # If index is 0, the agent wants to empty their hands
             state.agent.item_in_hand = None
-            print("You removed the item from your hands.")
+            if(state.prints_enabled):
+                print("You removed the item from your hands.")
             return 0
         if index >= 1 and index < len(state.agent.inventory) + 1:
+            if state.agent.item_in_hand.id == state.agent.inventory[index-1].id:  # If the selected item is already in hand, do nothing
+                if(state.prints_enabled):
+                    print(f"You are already holding: {state.agent.item_in_hand.__class__.__name__}")
+                return state.invalid_return_value
             state.agent.item_in_hand = state.agent.inventory[index-1]  # Set the item in hand to the selected inventory item
-            print(f"You are now holding: {state.agent.item_in_hand.__class__.__name__}")
+            if(state.prints_enabled):
+                print(f"You are now holding: {state.agent.item_in_hand.__class__.__name__}")
             return 0
-        print("Invalid index. No item in hand.")
-        return -100
+        if(state.prints_enabled):
+            print("Invalid index. No item in hand.")
+        return state.invalid_return_value

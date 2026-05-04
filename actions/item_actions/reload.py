@@ -11,8 +11,9 @@ class Reload(Action):     #class for the action of reloading a weapon
             # Already full
             needed = weapon.ammo_capacity - weapon.ammo
             if needed <= 0:
-                print("Your weapon is already fully loaded.")
-                return -100
+                if(state.prints_enabled):
+                    print("Your weapon is already fully loaded.")
+                return state.invalid_return_value
 
             transferred = 0
 
@@ -36,11 +37,13 @@ class Reload(Action):     #class for the action of reloading a weapon
                     break
 
             if transferred > 0:
-                print(f"You reloaded your {weapon.__class__.__name__} with {transferred} ammo. Current ammo: {weapon.ammo}/{weapon.ammo_capacity}")
-                return 10
-
-            print("You don't have any ammo to reload your weapon.")
-            return -100
+                if(state.prints_enabled):
+                    print(f"You reloaded your {weapon.__class__.__name__} with {transferred} ammo. Current ammo: {weapon.ammo}/{weapon.ammo_capacity}")
+                return 20
+            if(state.prints_enabled):
+                print("You don't have any ammo to reload your weapon.")
+            return state.invalid_return_value
         else:
-            print("You need to have a ranged weapon in hand to reload.")
-            return -100
+            if(state.prints_enabled):
+                print("You need to have a ranged weapon in hand to reload.")
+            return state.invalid_return_value

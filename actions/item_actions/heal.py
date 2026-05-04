@@ -15,8 +15,10 @@ class Heal(Action):     #class for the action of perceiving the surroundings
             state.agent.inventory_space_used -= heal_item.inventory_space
             state.agent.item_in_hand = None
             state.agent.status[2] = 0
-            print(f"You used a medkit and healed {heal_item.heal_amount} health. Current health: {state.agent.health}") # type: ignore
-            return heal_item.heal_amount / 2 # type: ignore
+            if(state.prints_enabled):
+                print(f"You used a medkit and healed {heal_item.heal_amount} health. Current health: {state.agent.health}") # type: ignore
+            return heal_item.heal_amount    # type: ignore
         else:
-            print("You need to have a medkit in hand to heal.")
-            return -100
+            if(state.prints_enabled):
+                print("You need to have a medkit in hand to heal.")
+            return state.invalid_return_value

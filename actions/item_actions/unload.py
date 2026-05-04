@@ -14,7 +14,8 @@ class Unload(Action):   #class for unloading ammo from the item in hand
                 previous_ground = state.agent.standing_on
                 weapon_ammo = Ammo()
                 weapon_ammo.ammo_count = weapon.ammo
-                print(f"Unloaded {weapon_ammo.ammo_count} ammo from {weapon.__class__.__name__}.")
+                if(state.prints_enabled):
+                    print(f"Unloaded {weapon_ammo.ammo_count} ammo from {weapon.__class__.__name__}.")
                 state.agent.standing_on = weapon_ammo
                 PickupItem.action(state)
                 if state.agent.standing_on.__class__.__name__ == "Ammo":
@@ -23,5 +24,6 @@ class Unload(Action):   #class for unloading ammo from the item in hand
                     weapon.ammo = 0
                 state.agent.standing_on = previous_ground
                 return 0
-            print("No ammo to unload or item in hand is not a ranged weapon.")
-        return -100
+            if(state.prints_enabled):
+                print("No ammo to unload or item in hand is not a ranged weapon.")
+        return state.invalid_return_value
