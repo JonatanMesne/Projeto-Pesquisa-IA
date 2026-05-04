@@ -14,7 +14,7 @@ from actions.change_held_item import ChangeHeldItem
 
 class Agent(Entity):
     id = 1
-    max_inventory_space = 10
+    max_inventory_space = 10    #If this ever changes, update drop_item.py
     possible_status_effects = ["thirsty", "hungry", "tired", "bleeding"]
 
     #construtor

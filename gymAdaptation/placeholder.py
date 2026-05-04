@@ -44,6 +44,7 @@ class Placeholder(gym.Env):
     # Mapeia estado atual na estrutura do espaço observacional (observação do agente do ambiente do problema)
     def observation(self) -> dict[str, Any]:
         UpdateVision().action(self.state) #update the agent vision
+        self.state.agent.update_possible_actions(self.state)   #update possible actions after vision update
         inventory = np.full((Agent.max_inventory_space,), 0)
         for i in range(len(self.state.agent.inventory)):
             inventory[i] = self.state.agent.inventory[i].id

@@ -42,7 +42,7 @@ import time
 gym.register(
     id='zombie-survival-v0',
     entry_point='gymAdaptation.placeholder:Placeholder',
-    # max_episode_steps=300,  # Prevent infinite episodes
+    max_episode_steps=300,  # Prevent infinite episodes
 )
 
 env = gym.make("zombie-survival-v0")

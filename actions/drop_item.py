@@ -3,7 +3,8 @@ from actions.action import Action
 class DropItem(Action):     #class for the action of dropping an item from the agent's inventory
     duration = 0
     need_index = True
-    id = 200 #to 200 + agent_inventory
+    agent_max_invetory_space = 10
+    id = 28 + agent_max_invetory_space  #to 28 + agent_max_invetory_space * 2
 
     @staticmethod
     def action(state) -> int:
