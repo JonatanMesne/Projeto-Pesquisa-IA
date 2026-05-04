@@ -51,7 +51,7 @@ class State:
         25,  #unload
         26  #pickup_item
     ]
-    for i in range(100, 100 + Agent.max_inventory_space):   #adding change_held_item ids for every inventory slot
+    for i in range(100, 100 + Agent.max_inventory_space + 1):   #adding change_held_item ids for every inventory slot
         all_possible_agent_actions_ids.append(i)
     for i in range(200, 200 + Agent.max_inventory_space):   #adding drop_item ids for every inventory slot
         all_possible_agent_actions_ids.append(i)
@@ -134,8 +134,10 @@ class State:
         self.index = -1
         self.wave_count = 0
         self.time_limit = time_limit
-        
         self.world.generate_map(self, seed=seed)
+
+        # self.agent.print_agent_info(self)
+        # input("Press Enter to generate the map and start the environment...")
         
     def environment_start(self):
         while self.time_elapsed < self.time_limit:

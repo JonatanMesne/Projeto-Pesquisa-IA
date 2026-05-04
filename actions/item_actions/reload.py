@@ -6,10 +6,8 @@ class Reload(Action):     #class for the action of reloading a weapon
 
     @staticmethod
     def action(state) -> int:
-        if(state.agent.item_in_hand.__class__.__name__ == "RangedWeapon"):
-            # Must have a ranged weapon in hand
-            weapon = state.agent.item_in_hand
-
+        weapon = state.agent.item_in_hand
+        if any(base.__name__ == "RangedWeapon" for base in type(weapon).mro()): #check if item in hand is a ranged weapon (or subclass of)
             # Already full
             needed = weapon.ammo_capacity - weapon.ammo
             if needed <= 0:

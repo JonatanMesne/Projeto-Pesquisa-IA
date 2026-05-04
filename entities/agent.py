@@ -16,9 +16,10 @@ class Agent(Entity):
     id = 1
     max_inventory_space = 10
     possible_status_effects = ["thirsty", "hungry", "tired", "bleeding"]
+
     #construtor
     def __init__(self, appearence = 'A', health = 100, inventory = [], 
-                status = [0, 0, 0, 0], vision_range = 6, player_controlled = False):
+                vision_range = 6, player_controlled = False):
         super().__init__(appearence, health, vision_range)
         self.inventory = inventory
         self.id_inventory = []
@@ -31,7 +32,7 @@ class Agent(Entity):
         self.hunger = 0
         self.max_thirst = 100
         self.thirst = 0
-        self.status = status
+        self.status = [0, 0, 0, 0] #thirsty, hungry, tired, bleeding
         self.item_in_hand = None
         self.player_controlled = player_controlled
         self.possible_actions = []
@@ -66,9 +67,9 @@ class Agent(Entity):
             if self.status[1] > 0:
                 print(f"- Hungry (Decreases stamina regeneration)")
             if self.status[2] > 0:
-                print(f"- Tired (Cannot run or climb)")
-            if self.status[3] > 0:
                 print(f"- Bleeding (Loses health over time)")
+            if self.status[3] > 0:
+                print(f"- Tired (Cannot run or climb)")
         else:
             print("Status Effects: None")
         print(f"Inventory Space Used: {self.inventory_space_used}/{self.max_inventory_space}")
@@ -136,10 +137,12 @@ class Agent(Entity):
         if len(self.inventory) > 0:
             if self.item_in_hand == None:
                 for i in range(len(self.inventory)):
-                    self.possible_actions.append(ChangeHeldItem.id + i)
-            elif len(self.inventory) > 1:
-                for i in range(len(self.inventory)):
-                    self.possible_actions.append(ChangeHeldItem.id + i)
+                    self.possible_actions.append(ChangeHeldItem.id + i + 1)
+            else:
+                self.possible_actions.append(ChangeHeldItem.id) #option to empty hands
+                if len(self.inventory) > 1:
+                    for i in range(len(self.inventory)):
+                        self.possible_actions.append(ChangeHeldItem.id + i + 1)
             for i in range(len(self.inventory)):
                 self.possible_actions.append(DropItem.id + i)
             
@@ -166,11 +169,16 @@ class Agent(Entity):
                     direction = "Down"
                 elif self.possible_actions[i] - action.id == 3:
                     direction = "Left"
-                print(f"{i}- {action.__name__} (Direction: {direction})")
+                print(f"{self.possible_actions[i]}- {action.__name__} (Direction: {direction})")
             elif action.need_index:
-                print(f"{i}- {action.__name__} (Index: {self.possible_actions[i] - action.id})")
+                if self.possible_actions[i] == ChangeHeldItem.id:
+                    print(f"{self.possible_actions[i]}- Empty Hands")
+                elif self.possible_actions[i] < DropItem.id:
+                    print(f"{self.possible_actions[i]}- {action.__name__} (Index: {self.possible_actions[i] - action.id - 1})")
+                else:
+                    print(f"{self.possible_actions[i]}- {action.__name__} (Index: {self.possible_actions[i] - action.id})")
             else:
-                print(f"{i}- {action.__name__}")
+                print(f"{self.possible_actions[i]}- {action.__name__}")
                 
     def print_agent_info(self, state):
         self.print_vision_data()
@@ -185,10 +193,10 @@ class Agent(Entity):
             while True:
                 try:
                     choice = int(input("\nEnter the number of the action you want to perform: "))
-                    if choice < 0 or choice >= len(self.possible_actions):
+                    if choice not in self.possible_actions:
                         print("Invalid choice. Please enter a valid number.")
                     else:
-                        state.current_action_id = self.possible_actions[choice]
+                        state.current_action_id = choice
                     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
                     return True
                 except ValueError:

@@ -1,5 +1,7 @@
 from entities.entity import Entity
 from actions.action import Action
+from items.weapons.melee import MeleeWeapon
+from items.weapons.ranged import RangedWeapon
 from world_objects.ground import Ground
 
 class Attack(Action):     #class for the action of perceiving the surroundings
@@ -13,7 +15,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
         damage_total = 0           # keep track of total damage dealt
         entity_direction = state.current_action_id - Attack.id  # Calculate direction based on action ID
 
-        if not state.agent.item_in_hand.__class__.__name__ in ("MeleeWeapon", "RangedWeapon"):
+        if not isinstance(state.agent.item_in_hand, (MeleeWeapon, RangedWeapon)):
             pierce = 99
             fire_rate = 1
             damage = 5
@@ -22,7 +24,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
         else:
             weapon_range = state.agent.item_in_hand.range
             damage = state.agent.item_in_hand.damage
-            if state.agent.item_in_hand.__class__.__name__ == "RangedWeapon":
+            if isinstance(state.agent.item_in_hand, RangedWeapon):
                 if state.agent.item_in_hand.ammo > 0:
                     pierce = state.agent.item_in_hand.pierce
                     fire_rate = state.agent.item_in_hand.fire_rate
@@ -49,7 +51,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
         for _ in range(fire_rate):
             # track entities hit this shot (in order from nearest to farthest)
             hits = []  # list of (entity, position)
-            if state.agent.item_in_hand.__class__.__name__ == "RangedWeapon":
+            if isinstance(state.agent.item_in_hand, RangedWeapon):
                 state.agent.item_in_hand.ammo -= 1
             for j in range(weapon_range):
                 target_position = [state.agent.position[0] + direction_array[0] * (j + 1), 

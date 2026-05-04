@@ -19,10 +19,11 @@ LEFT = 4
 estado = State()
 
 while True:
-    estado.reset(seed='', player_controlled=True, time_limit=1000)
+    estado.reset(seed='', player_controlled=False, time_limit=1000)
 
     # print(estado.world)
 
     # estado.agent.inventory = [Ammo(), Medkit(), Food(), Water(), BaseballBat(), Knife(), Pistol(), Smg()]
 
     estado.environment_start()
+    input("\n################################  Environment ended. Press Enter to reset the environment and start again...  ################################")
