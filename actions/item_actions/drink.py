@@ -13,8 +13,10 @@ class Drink(Action):     #class for the action of drinking water
             state.agent.inventory_space_used -= water.inventory_space
             state.agent.item_in_hand = None
             state.agent.status[0] = 0
-            print(f"You drank water and reduced your thirst by {water.thirst_satiation}. Current thirst: {state.agent.thirst}")
-            return water.thirst_satiation / 2
+            if(state.prints_enabled):
+                print(f"You drank water and reduced your thirst by {water.thirst_satiation}. Current thirst: {state.agent.thirst}")
+            return water.thirst_satiation
         else:
-            print("You need to have water in hand to drink.")
-            return -100
+            if(state.prints_enabled):
+                print("You need to have water in hand to drink.")
+            return state.invalid_return_value

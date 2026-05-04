@@ -18,7 +18,9 @@ class DropItem(Action):     #class for the action of dropping an item from the a
                 state.agent.standing_on.ammo_count += min(item_dropped.ammo_count + state.agent.standing_on.ammo_count, item_dropped.stack_size)  # Stack ammo if dropping on existing ammo
             state.agent.inventory_space_used -= item_dropped.inventory_space
             state.agent.inventory.pop(index)
-            print(f"You dropped: {item_dropped.__class__.__name__}")
+            if(state.prints_enabled):
+                print(f"You dropped: {item_dropped.__class__.__name__}")
             return 0
-        print("Invalid index. No item dropped.")
-        return -100
+        if(state.prints_enabled):
+            print("Invalid index. No item dropped.")
+        return state.invalid_return_value

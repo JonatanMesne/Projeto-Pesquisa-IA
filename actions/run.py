@@ -15,8 +15,8 @@ class Run(Action):     #class for the action of running a few tiles
             state.current_action_id = state.current_action_id - 4  # Adjust the action ID to correspond to walking in the same direction
             for _ in range(Run.run_distance):
                 if state.agent.stamina >= 5:
-                    state.agent.stamina -= 5
                     if Walk.action(state) == 5:
+                        state.agent.stamina -= 5
                         return_value += 3
                     else:
                         break
@@ -24,10 +24,13 @@ class Run(Action):     #class for the action of running a few tiles
                     break
         if return_value > 0:
             if return_value // 3 < Run.run_distance:
-                print(f"You ran {return_value // 3} tile{'s' if return_value > 1 else ''} before getting too tired or hitting a solid object.")
+                if(state.prints_enabled):
+                    print(f"You ran {return_value // 3} tile{'s' if return_value > 1 else ''} before getting too tired or hitting a solid object.")
             else:
-                print(f"You ran {Run.run_distance} tiles.")
+                if(state.prints_enabled):
+                    print(f"You ran {Run.run_distance} tiles.")
             return return_value
         else:
-            print("You are too tired to run or hit a solid object.")
-            return -100
+            if(state.prints_enabled):
+                print("You are too tired to run or hit a solid object.")
+            return state.invalid_return_value

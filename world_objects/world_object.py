@@ -1,7 +1,7 @@
 class WorldObject:
     id = 10
     #construtor
-    def __init__(self, appearence='-', is_solid = False, is_destructible = False, 
+    def __init__(self, appearence=' ', is_solid = False, is_destructible = False, 
                  durability = -1, has_action = False, action = None):
         self.appearence = appearence
         self.is_solid = is_solid

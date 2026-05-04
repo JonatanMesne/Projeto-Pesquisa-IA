@@ -40,30 +40,34 @@ class PickupItem(Action):   #class for picking up items
                         new_ammo_stack = Ammo()
                         new_ammo_stack.ammo_count = ammo_to_pickup
                         state.agent.inventory.append(new_ammo_stack)
-                        state.agent.id_inventory.append(new_ammo_stack.id)
                         state.agent.inventory_space_used += new_ammo_stack.inventory_space
                         state.agent.standing_on = Ground()
-                        print(f"You picked up: {item_to_pickup.__class__.__name__} (stack of {ammo_to_pickup} ammo)")
-                        return 10
+                        if(state.prints_enabled):
+                            print(f"You picked up: {item_to_pickup.__class__.__name__} (stack of {ammo_to_pickup} ammo)")
+                        return 30
                 if return_value:
-                    print(f"You picked up: {item_to_pickup.__class__.__name__} (added to existing stacks)")
-                    return 10
+                    if(state.prints_enabled):
+                        print(f"You picked up: {item_to_pickup.__class__.__name__} (added to existing stacks)")
+                    return 30
                 else:
-                    print("Cannot pick up ammo: inventory is full.")
-                    return -100  # Inventory is full
+                    if(state.prints_enabled):
+                        print("Cannot pick up ammo: inventory is full.")
+                    return state.invalid_return_value  # Inventory is full
             else:
                 # Handle regular items (non-ammo)
                 if state.agent.inventory_space_used + item_to_pickup.inventory_space <= state.agent.max_inventory_space:
                     state.agent.inventory.append(item_to_pickup)
-                    state.agent.id_inventory.append(item_to_pickup.id)
                     state.agent.inventory_space_used += item_to_pickup.inventory_space
                     # Remove the item from the map grid
                     state.agent.standing_on = Ground()  # the agent is now standing on an empty ground tile
-                    print(f"You picked up: {item_to_pickup.__class__.__name__}")
-                    return 10
+                    if(state.prints_enabled):
+                        print(f"You picked up: {item_to_pickup.__class__.__name__}")
+                    return 30
                 else:
-                    print("Cannot pick up item: inventory is full.")
-                    return -100  # Inventory is full
+                    if(state.prints_enabled):
+                        print("Cannot pick up item: inventory is full.")
+                    return state.invalid_return_value  # Inventory is full
         else:
-            print("No item to pick up here.")
-            return -100  # No item to pick up
+            if(state.prints_enabled):
+                print("No item to pick up here.")
+            return state.invalid_return_value  # No item to pick up

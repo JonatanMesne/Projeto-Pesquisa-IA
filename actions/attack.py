@@ -28,8 +28,9 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     fire_rate = state.agent.item_in_hand.fire_rate
                     knockback = 0
                 else:
-                    print("Attack failed: no ammo.")
-                    return -100  # No ammo, cannot attack
+                    if(state.prints_enabled):
+                        print("Attack failed: no ammo.")
+                    return state.invalid_return_value  # No ammo, cannot attack
             else:
                 pierce = 99
                 fire_rate = 1
@@ -67,7 +68,8 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     if target_cell.health <= 0:
                         # entity died — remove from map
                         state.entity_death(target_cell)
-                        print(f"{target_cell.__class__.__name__} has been defeated.")
+                        if(state.prints_enabled):
+                            print(f"{target_cell.__class__.__name__} has been defeated.")
                     else:
                         # record hit (store entity reference)
                         hits.append(target_cell)
@@ -83,8 +85,8 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     damage_total += dmg
                     if target_cell.durability <= 0:
                         state.world.grid[target_position[0]][target_position[1]] = Ground()  # Replace with a passable ground tile
-                        state.world.id_grid[target_position[0]][target_position[1]] = Ground().id
-                        print("You destroyed a wall!")
+                        if(state.prints_enabled):
+                            print("You destroyed a wall!")
                     break  # Hit a wall, stop checking further
 
             # apply knockback for this shot's hits, from farthest to nearest
@@ -104,12 +106,13 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                             break
                         # move entity: set current cell to its standing_on, place entity in new cell
                         state.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
-                        state.world.id_grid[entity.position[0]][entity.position[1]] = entity.standing_on.id
                         entity.place_entity(state.world.grid, [new_x, new_y])  # Update entity's position on the grid
 
         if not hit:
-            print("Your attack missed.")
-            return -100
+            if(state.prints_enabled):
+                print("Your attack missed.")
+            return state.invalid_return_value
 
-        print(f"You dealt {damage_total} total damage.")
-        return damage_total * 5
+        if(state.prints_enabled):
+            print(f"You dealt {damage_total} total damage.")
+        return damage_total * 10

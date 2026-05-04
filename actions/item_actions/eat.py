@@ -13,8 +13,10 @@ class Eat(Action):     #class for the action of eating food
             state.agent.inventory_space_used -= food.inventory_space
             state.agent.item_in_hand = None
             state.agent.status[1] = 0
-            print(f"You ate food and reduced your hunger by {food.hunger_satiation}. Current hunger: {state.agent.hunger}")
-            return food.hunger_satiation / 2
+            if(state.prints_enabled):
+                print(f"You ate food and reduced your hunger by {food.hunger_satiation}. Current hunger: {state.agent.hunger}")
+            return food.hunger_satiation
         else:
-            print("You need to have food in hand to eat.")
-            return -100
+            if(state.prints_enabled):
+                print("You need to have food in hand to eat.")
+            return state.invalid_return_value

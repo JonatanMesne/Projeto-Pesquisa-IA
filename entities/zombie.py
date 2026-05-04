@@ -13,12 +13,6 @@ class Zombie(Entity):
         super().__init__(appearence, health, vision_range)
         self.damage = damage
         self.item_drop_chance = item_drop_chance
-
-    vector = []
-    #self.vector = [self.health, self.id_vision_data, self.position, self.standing_on.id]
-
-    def update_vector(self):
-        self.vector = [self.health, self.id_vision_data, self.position, self.standing_on.id]
         
     def print_status(self):
         print(f'Health: {self.health}')
@@ -39,12 +33,14 @@ class Zombie(Entity):
     def zombie_death(self, state):
         state.zombies.remove(self)
         state.zombies_killed += 1
-        print("\nZombie killed!!!")
+        if(state.prints_enabled):
+            print("\nZombie killed!!!")
         # get item from state world
         if self.standing_on.__class__.__name__ == "Ground":
             self.standing_on = state.world.choose_item(self.item_drop_chance)
             if self.standing_on.__class__.__name__ == "Ground":    
-                print("\nItem dropped: ", self.standing_on)
+                if(state.prints_enabled):
+                    print("\nItem dropped: ", self.standing_on)
         
     def zombie_action(self, state):
         # Behavior logic for the zombie
@@ -81,7 +77,7 @@ class Zombie(Entity):
                 state.agent.status[2] = 3  # Agent is infected for 3 turns
         else:
             zombie_direction = state.current_action_id
-            if not Walk.action(state):
+            if Walk.action(state) == -100: # If the zombie cannot walk in the chosen direction, try to walk a different direction towards the agent or attack the object in front
                 if zombie_direction == 1 or zombie_direction == 3:
                     if distance_to_agent[1] < 0:
                         state.current_action_id = 4  # walk left
@@ -92,7 +88,7 @@ class Zombie(Entity):
                         state.current_action_id = 1  # walk up
                     elif distance_to_agent[0] > 0:
                         state.current_action_id = 3  # walk down
-                if state.current_action_id == 0 or not Walk.action(state):
+                if state.current_action_id == 0 or Walk.action(state) == -100:
                     # determine coordinates in front of the zombie based on its original direction
                     if zombie_direction == 1:   # up
                         new_x = self.position[0] - 1

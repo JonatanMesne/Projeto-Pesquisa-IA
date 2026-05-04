@@ -18,7 +18,9 @@ class Climb(Action):     #class for the action of climbing a small wall
                 Walk.action(state)
                 world_object.is_solid = True
                 state.agent.stamina -= 10
-                print("You climbed over the obstacle.")
+                if(state.prints_enabled):
+                    print("You climbed over the obstacle.")
                 return 5
-        print("Climb failed: not enough stamina or no climbable object in front.")
-        return -100
+        if(state.prints_enabled):
+            print("Climb failed: not enough stamina or no climbable object in front.")
+        return state.invalid_return_value

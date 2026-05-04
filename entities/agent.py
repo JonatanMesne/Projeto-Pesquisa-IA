@@ -17,40 +17,26 @@ class Agent(Entity):
     max_inventory_space = 10
     possible_status_effects = ["thirsty", "hungry", "tired", "bleeding"]
     #construtor
-    def __init__(self, appearence = 'A', health = 100, inventory = [], 
-                status = [0, 0, 0, 0], vision_range = 6, player_controlled = False):
-        super().__init__(appearence, health, vision_range)
-        self.inventory = inventory
-        self.id_inventory = []
+    def __init__(self, player_controlled = False):
+        super().__init__('A', 100, vision_range=4)
+        self.inventory = []
         self.max_inventory_space = Agent.max_inventory_space
         self.inventory_space_used = 0
         self.max_stamina = 100
         self.stamina = self.max_stamina
-        self.max_health = health
+        self.max_health = 100
         self.max_hunger = 100
         self.hunger = 0
         self.max_thirst = 100
         self.thirst = 0
-        self.status = status
+        self.status = [0, 0, 0, 0]   #binary vector indicating whether the agent is affected by each possible status effect
         self.item_in_hand = None
         self.player_controlled = player_controlled
         self.possible_actions = []
         
-    vector = []
-    # self.vector = [self.id_vision_data, self.position, self.standing_on.id, self.health, self.max_health, self.stamina, self.max_stamina, 
-    #                self.hunger, self.max_hunger, self.thirst, self.max_thirst, self.status, self.id_inventory, self.inventory_space_used, 
-    #                self.max_inventory_space, self.item_in_hand.id if self.item_in_hand else -1, self.possible_actions]
-
-    def update_vector(self):
-        self.vector = [self.id_vision_data, self.position, self.standing_on.id, self.health, self.max_health, self.stamina, self.max_stamina, 
-                        self.hunger, self.max_hunger, self.thirst, self.max_thirst, self.status, self.id_inventory, self.inventory_space_used, 
-                        self.max_inventory_space, self.item_in_hand.id if self.item_in_hand else -1, self.possible_actions]
-        
     def sum_status(self) -> int:
         total = 0
         for i in range(len(self.status)):
-            if isinstance(self.status[i], str):
-                print(f"Warning: Status effect '{self.status[i]}' is a string. Expected an integer value.")
             total += self.status[i]
         return total
                 
@@ -166,11 +152,11 @@ class Agent(Entity):
                     direction = "Down"
                 elif self.possible_actions[i] - action.id == 3:
                     direction = "Left"
-                print(f"{i}- {action.__name__} (Direction: {direction})")
+                print(f"{self.possible_actions[i]}- {action.__name__} (Direction: {direction})")
             elif action.need_index:
-                print(f"{i}- {action.__name__} (Index: {self.possible_actions[i] - action.id})")
+                print(f"{self.possible_actions[i]}- {action.__name__} (Index: {self.possible_actions[i] - action.id})")
             else:
-                print(f"{i}- {action.__name__}")
+                print(f"{self.possible_actions[i]}- {action.__name__}")
                 
     def print_agent_info(self, state):
         self.print_vision_data()

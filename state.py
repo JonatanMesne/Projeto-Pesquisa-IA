@@ -51,27 +51,27 @@ class State:
         25,  #unload
         26  #pickup_item
     ]
-    for i in range(100, 100 + Agent.max_inventory_space):   #adding change_held_item ids for every inventory slot
+    for i in range(27, 28 + Agent.max_inventory_space):   #adding change_held_item ids for every inventory slot
         all_possible_agent_actions_ids.append(i)
-    for i in range(200, 200 + Agent.max_inventory_space):   #adding drop_item ids for every inventory slot
+    for i in range(28 + Agent.max_inventory_space, 28 + Agent.max_inventory_space * 2):   #adding drop_item ids for every inventory slot
         all_possible_agent_actions_ids.append(i)
-        
+    
     all_possible_agent_actions = [
-        Idle, 
-        Walk, 
-        Run, 
-        Attack, 
-        Climb, 
-        DoorAction, 
-        Drink, 
-        Eat, 
-        Heal, 
-        Reload, 
-        Unload, 
-        PickupItem,
-        ChangeHeldItem,
-        DropItem,
-        Action
+        Idle, #id 0
+        Walk, #id 1-4
+        Run, #id 5-8
+        Attack, #id 9-12
+        Climb, #id 13-16
+        DoorAction, #id 17-20
+        Drink, #id 21
+        Eat, #id 22
+        Heal, #id 23
+        Reload, #id 24
+        Unload, #id 25
+        PickupItem, #id 26
+        ChangeHeldItem, #id 27 - 27+Agent.max_inventory_space
+        DropItem, #id 27+Agent.max_inventory_space + 1 - 27 + 1 +Agent.max_inventory_space*2
+        Action #id 999
     ]
     
     def get_action(self, action_id):
@@ -80,7 +80,10 @@ class State:
                 return self.all_possible_agent_actions[i-1]
         return None #should never reach this
     
-    def __init__(self):
+    greatest_WO_id = 42
+    greatest_action_id = 28 + Agent.max_inventory_space * 2 - 1
+    def __init__(self, prints_enabled = False):
+        self.prints_enabled = prints_enabled
         self.agent: Agent
         self.zombies = []
         # self.zombies_vectors = []
@@ -99,23 +102,7 @@ class State:
         self.wave_count = 0
         self.time_limit = 1000
         self.zombies_killed = 0
-        self.vector = []
-        # self.vector = [self.agent.vector, self.world.vector, self.time_elapsed, self.hunger_per_time, self.thirst_per_time,
-        #                self.stamina_per_time, self.hunger_damage, self.thirst_damage, self.bleeding_damage,
-        #                self.hunger_threshold, self.thirst_threshold, self.wave_count, self.time_limit, self.zombies_killed,
-        #                self.zombies_vectors]
-
-    def update_vector(self):
-        self.agent.update_vector()
-        self.zombies_vectors = []
-        for zombie in self.zombies:
-            zombie.update_vector()
-            self.zombies_vectors.append(zombie.vector)
-        self.world.update_vector()
-        self.vector = [self.agent.vector, self.world.vector, self.time_elapsed, self.hunger_per_time, self.thirst_per_time,
-                       self.stamina_per_time, self.hunger_damage, self.thirst_damage, self.bleeding_damage,
-                       self.hunger_threshold, self.thirst_threshold, self.wave_count, self.time_limit, self.zombies_killed]
-        # self.vector.append(self.zombies_vectors)
+        self.invalid_return_value = -10000
         
     def print_self(self):
         print("Agent Direction:", self.entity_direction)
@@ -172,8 +159,8 @@ class State:
         current_action = self.get_action(self.current_action_id)
         action_duration = current_action.duration # type: ignore
         reward = current_action.action(self) # type: ignore
-        if reward == -100:
-            return reward       #?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????/
+        if reward == self.invalid_return_value:
+            return reward
         
         oldAgentHealth = self.agent.health
         oldZombiesKilled = self.zombies_killed

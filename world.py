@@ -1,5 +1,4 @@
 import random
-from chunks import Chunk
 from entities.zombie import Zombie
 from buildings import Buildings
 from world_objects.ground import Ground
@@ -15,6 +14,8 @@ from items.weapons.pistol import Pistol
 from items.weapons.smg import Smg
 
 class World:
+    chunk_size = 8
+    
     def __init__(self, map_length = 4, map_height = 4, wave_size = 20):
         self.length = map_length
         self.height = map_height
@@ -23,19 +24,12 @@ class World:
         self.seed_pointer = 0
         self.wave_size = wave_size
         self.item_chance = 15
-        self.id_grid = []
-        
-    vector = []
-    #self.vector = [self.length * Chunk.chunk_size, self.height * Chunk.chunk_size, self.id_grid]
-
-    def update_vector(self):
-        self.vector = [self.length * Chunk.chunk_size, self.height * Chunk.chunk_size, self.id_grid]
-
-    def init_id_grid(self):
-        for i in range(self.height * Chunk.chunk_size):
-            self.id_grid.append([])
-            for j in range(self.length * Chunk.chunk_size):
-                self.id_grid[i].append(self.grid[i][j].id)
+                
+    def create_empty_chunk(self, chunk_x):
+        for i in range(World.chunk_size):
+            for j in range(World.chunk_size):
+                self.grid[chunk_x].append(Ground())
+            chunk_x += 1
         
     def generate_seed(self):
         for _ in range(16):
@@ -99,41 +93,41 @@ class World:
                         
                 if houseType == 'A':
                     if buildingNumber == 0:
-                        Buildings.house1A(self, i * Chunk.chunk_size, j * Chunk.chunk_size)
+                        Buildings.house1A(self, i * World.chunk_size, j * World.chunk_size)
                     elif buildingNumber == 1:
-                        Buildings.house2A(self, i * Chunk.chunk_size, j * Chunk.chunk_size)    
+                        Buildings.house2A(self, i * World.chunk_size, j * World.chunk_size)    
                     elif buildingNumber == 2:
-                        Buildings.house3A(self, i * Chunk.chunk_size, j * Chunk.chunk_size)
+                        Buildings.house3A(self, i * World.chunk_size, j * World.chunk_size)
                     else:
                         print("Number out of range")
                     
                 if houseType == 'B':
                     if buildingNumber == 0:
-                        Buildings.house1B(self, i * Chunk.chunk_size, j * Chunk.chunk_size)
+                        Buildings.house1B(self, i * World.chunk_size, j * World.chunk_size)
                     elif buildingNumber == 1:
-                        Buildings.house2B(self, i * Chunk.chunk_size, j * Chunk.chunk_size)    
+                        Buildings.house2B(self, i * World.chunk_size, j * World.chunk_size)    
                     elif buildingNumber == 2:
-                        Buildings.house3B(self, i * Chunk.chunk_size, j * Chunk.chunk_size)
+                        Buildings.house3B(self, i * World.chunk_size, j * World.chunk_size)
                     else:
                         print("Number out of range")
                 
                 if houseType == 'C':
                     if buildingNumber == 0:
-                        Buildings.house1C(self, i * Chunk.chunk_size, j * Chunk.chunk_size)
+                        Buildings.house1C(self, i * World.chunk_size, j * World.chunk_size)
                     elif buildingNumber == 1:
-                        Buildings.house2C(self, i * Chunk.chunk_size, j * Chunk.chunk_size)    
+                        Buildings.house2C(self, i * World.chunk_size, j * World.chunk_size)    
                     elif buildingNumber == 2:
-                        Buildings.house3C(self, i * Chunk.chunk_size, j * Chunk.chunk_size)
+                        Buildings.house3C(self, i * World.chunk_size, j * World.chunk_size)
                     else:
                         print("Number out of range")
                         
                 if houseType == 'D':
                     if buildingNumber == 0:
-                        Buildings.house1D(self, i * Chunk.chunk_size, j * Chunk.chunk_size)
+                        Buildings.house1D(self, i * World.chunk_size, j * World.chunk_size)
                     elif buildingNumber == 1:
-                        Buildings.house2D(self, i * Chunk.chunk_size, j * Chunk.chunk_size)    
+                        Buildings.house2D(self, i * World.chunk_size, j * World.chunk_size)    
                     elif buildingNumber == 2:
-                        Buildings.house3D(self, i * Chunk.chunk_size, j * Chunk.chunk_size)
+                        Buildings.house3D(self, i * World.chunk_size, j * World.chunk_size)
                     else:
                         print("Number out of range")
         self.place_items()
@@ -175,19 +169,20 @@ class World:
             if len(self.seed) == 0:
                 self.generate_seed()
             
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSeed:", self.seed)
+        if(state.prints_enabled):
+            print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSeed:", self.seed)
         
         #extracting starting coordinates for agent from seed
-        agent_x = self.get_seed_number(3, self.height * Chunk.chunk_size)
-        agent_y = self.get_seed_number(3, self.length * Chunk.chunk_size)
+        agent_x = self.get_seed_number(3, self.height * World.chunk_size)
+        agent_y = self.get_seed_number(3, self.length * World.chunk_size)
         
         self.grid = []
-        for _ in range(self.height * Chunk.chunk_size):
+        for _ in range(self.height * World.chunk_size):
             self.grid.append([])
 
         for i in range(self.height):
             for _ in range(self.length):
-                Chunk.create_empty_chunk(self.grid, i*Chunk.chunk_size)
+                self.create_empty_chunk(i*World.chunk_size)
                 
         self.generate_buildings()
                 
@@ -195,16 +190,15 @@ class World:
         state.agent.place_entity(self.grid, [agent_x, agent_y])
         
         self.generate_wave(state)
-        self.init_id_grid()
             
     def __str__(self) -> str:
         grid = ''
-        # for i in range(self.length * Chunk.chunk_size):
+        # for i in range(self.length * World.chunk_size):
         #     grid += str(i + 1) + ' '
         # grid += '\n'
-        for i in range(self.height * Chunk.chunk_size):
+        for i in range(self.height * World.chunk_size):
             # grid += str(i + 1) + ' '
-            for j in range(self.length * Chunk.chunk_size):
+            for j in range(self.length * World.chunk_size):
                 grid += self.grid[i][j].appearence + ' '
             grid += '\n'
         return grid

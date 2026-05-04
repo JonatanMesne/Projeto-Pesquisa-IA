@@ -21,7 +21,7 @@ class DoorAction(Action):   #class for opening and closing doors
         if (WO_position[0] < 0 or WO_position[0] >= len(state.world.grid) or
             WO_position[1] < 0 or WO_position[1] >= len(state.world.grid[0])):
             # print("Invalid move to position:", next_position)
-            return -100
+            return state.invalid_return_value
         world_object = state.world.grid[WO_position[0]][WO_position[1]]
         
         if world_object.__class__.__name__ == 'Door':
@@ -30,14 +30,14 @@ class DoorAction(Action):   #class for opening and closing doors
                 world_object.appearence = 'd'  #Open door
                 world_object.is_solid = False
                 world_object.id = 15  #Change ID to represent open door
-                state.world.id_grid[WO_position[0]][WO_position[1]] = world_object.id  #Update the world's ID grid to reflect the door's new state
             else:
                 world_object.appearence = 'D'  #Closed door
                 world_object.is_solid = True
                 world_object.id = 14  #Change ID back to represent closed door
-                state.world.id_grid[WO_position[0]][WO_position[1]] = world_object.id  #Update the world's ID grid to reflect the door's new state
-            print(f"You {'opened' if not world_object.is_solid else 'closed'} the door.")
+            if(state.prints_enabled):
+                print(f"You {'opened' if not world_object.is_solid else 'closed'} the door.")
             return 0
         else:
-            print("There is no door in that direction.")
-            return -100
+            if(state.prints_enabled):
+                print("There is no door in that direction.")
+            return state.invalid_return_value
