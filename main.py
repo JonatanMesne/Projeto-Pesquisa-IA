@@ -38,6 +38,33 @@ from stable_baselines3 import PPO
 import gymnasium as gym
 
 import time
+import os
+from dotenv import load_dotenv, set_key
+from pathlib import Path
+
+def render_env(env, model, sleep_time=1.0):
+    obs, info = env.reset()
+    while True:
+        action, _states = model.predict(obs, deterministic=True)
+        obs, reward, terminated, truncated, info = env.step(action)
+        env.render()
+        print(f"Reward: {reward}")
+        print(f"Action taken: {action}")
+        time.sleep(sleep_time)  # Adjust the sleep time as needed for better visualization
+        if terminated or truncated:
+            obs, info = env.reset()
+            
+def reset_ppo_count(env_file_path):
+    set_key(
+        dotenv_path=env_file_path,
+        key_to_set="PPO_COUNT",
+        value_to_set='0'
+    )
+    print("PPO_COUNT reset to 0 in .env file.")
+    env = gym.make("zombie-survival-v0")
+    reset_model = PPO("MultiInputPolicy", env, verbose=1)
+    reset_model.save("models/zombie_survival_ppo0")
+    print("Initial PPO model saved with count: 0")
 
 gym.register(
     id='zombie-survival-v0',
@@ -45,24 +72,42 @@ gym.register(
     max_episode_steps=300,  # Prevent infinite episodes
 )
 
+env_file_path = Path("training.env")
+
+load_dotenv(dotenv_path=env_file_path)
+ppo_count = os.getenv("PPO_COUNT")
+if ppo_count is None:
+    ppo_count = 0
+else:
+    ppo_count = int(ppo_count)
+print(f"PPO_COUNT from .env: {ppo_count}")
+
+# reset_ppo_count(env_file_path)  # Reset PPO_COUNT to 0 and save the initial model before starting training
+
 env = gym.make("zombie-survival-v0")
 check_env(env)
 
-model = PPO("MultiInputPolicy", env, verbose=1)
-model.learn(total_timesteps=10000, log_interval=500)
-model.save("zombie_survival_ppo")
+# model = PPO.load(f"models/zombie_survival_ppo{ppo_count%5}")
+# render_env(env, model, sleep_time=1.0)
 
-del model # remove to demonstrate saving and loading
-
-model = PPO.load("zombie_survival_ppo")
-
-obs, info = env.reset()
-while True:
-    action, _states = model.predict(obs, deterministic=True)
-    obs, reward, terminated, truncated, info = env.step(action)
-    env.render()
-    print(f"Reward: {reward}")
-    print(f"Action taken: {action}")
-    time.sleep(1)  # Adjust the sleep time as needed for better visualization
-    if terminated or truncated:
-        obs, info = env.reset()
+while(ppo_count < 120):
+    print(f"Starting PPO training with count: {ppo_count}")
+    model = PPO.load(f"models/zombie_survival_ppo{ppo_count%5}", env=env)
+    model.learn(total_timesteps=100000, log_interval=100)
+    ppo_count += 1
+    set_key(
+        dotenv_path=env_file_path,
+        key_to_set="PPO_COUNT",
+        value_to_set=f"{ppo_count}"
+    )
+    model.save(f"models/zombie_survival_ppo{ppo_count%5}")
+    if ppo_count == 29:
+        model.save(f"models/zombie_survival_ppo25")
+    if ppo_count == 59:
+        model.save(f"models/zombie_survival_ppo50")
+    if ppo_count == 89:
+        model.save(f"models/zombie_survival_ppo75")
+    if ppo_count == 119:
+        model.save(f"models/zombie_survival_ppo100")
+    print(f"Saved PPO model with count: {ppo_count%5}")
+    time.sleep(60)  # Sleep for 60 seconds before the next training iteration to end the training session safely
