@@ -15,6 +15,8 @@ class Eat(Action):     #class for the action of eating food
             state.agent.status[1] = 0
             if(state.prints_enabled):
                 print(f"You ate food and reduced your hunger by {food.hunger_satiation}. Current hunger: {state.agent.hunger}")
+            if state.agent.hunger == state.agent.max_hunger:
+                return -10
             return food.hunger_satiation
         else:
             if(state.prints_enabled):

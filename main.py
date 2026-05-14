@@ -42,13 +42,16 @@ import os
 from dotenv import load_dotenv, set_key
 from pathlib import Path
 
+from state import State
+
 def render_env(env, model, sleep_time=1.0):
     obs, info = env.reset()
+    estado = State()
     while True:
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, terminated, truncated, info = env.step(action)
         env.render()
-        print(f"Reward: {reward}")
+        print(f"Reward: {reward} (invalid reward: {estado.invalid_return_value})")
         print(f"Action taken: {action}")
         time.sleep(sleep_time)  # Adjust the sleep time as needed for better visualization
         if terminated or truncated:
@@ -65,6 +68,7 @@ def reset_ppo_count(env_file_path):
     reset_model = PPO("MultiInputPolicy", env, verbose=1)
     reset_model.save("models/zombie_survival_ppo0")
     print("Initial PPO model saved with count: 0")
+    exit(0)  # Exit after resetting PPO_COUNT and saving the initial model
 
 gym.register(
     id='zombie-survival-v0',
@@ -87,27 +91,27 @@ print(f"PPO_COUNT from .env: {ppo_count}")
 env = gym.make("zombie-survival-v0")
 check_env(env)
 
-# model = PPO.load(f"models/zombie_survival_ppo{ppo_count%5}")
-# render_env(env, model, sleep_time=1.0)
+# model = PPO.load(f"models/zombie_survival_ppo{(ppo_count-1)%4}")
+# render_env(env, model, sleep_time=0.25)
 
-while(ppo_count < 120):
+while(ppo_count < 100): #roughly 10 hours of training
     print(f"Starting PPO training with count: {ppo_count}")
-    model = PPO.load(f"models/zombie_survival_ppo{ppo_count%5}", env=env)
-    model.learn(total_timesteps=100000, log_interval=100)
+    model = PPO.load(f"models/zombie_survival_ppo{ppo_count%4}", env=env)
+    model.learn(total_timesteps=75000, log_interval=5) #roughly 6 minutes of training per iteration
     ppo_count += 1
     set_key(
         dotenv_path=env_file_path,
         key_to_set="PPO_COUNT",
         value_to_set=f"{ppo_count}"
     )
-    model.save(f"models/zombie_survival_ppo{ppo_count%5}")
-    if ppo_count == 29:
-        model.save(f"models/zombie_survival_ppo25")
-    if ppo_count == 59:
-        model.save(f"models/zombie_survival_ppo50")
-    if ppo_count == 89:
-        model.save(f"models/zombie_survival_ppo75")
-    if ppo_count == 119:
-        model.save(f"models/zombie_survival_ppo100")
-    print(f"Saved PPO model with count: {ppo_count%5}")
-    time.sleep(60)  # Sleep for 60 seconds before the next training iteration to end the training session safely
+    model.save(f"models/zombie_survival_ppo{ppo_count%4}")
+    if ppo_count == 24:
+        model.save(f"models/zombie_survival_ppo25%")
+    if ppo_count == 49:
+        model.save(f"models/zombie_survival_ppo50%")
+    if ppo_count == 74:
+        model.save(f"models/zombie_survival_ppo75%")
+    if ppo_count == 99:
+        model.save(f"models/zombie_survival_ppo100%")
+    print(f"Saved PPO model with count: {ppo_count%4}")
+    # time.sleep(60)  # Sleep for 60 seconds before the next training iteration to end the training session safely

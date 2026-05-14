@@ -156,7 +156,7 @@ class Placeholder(gym.Env):
         # Retorna uma tupla contendo:
         # a observação do próximo estado, a recompensa imediata obtida, se o estado é final,
         # se a simulação deve ser encerrada (estado inválido, mas não final) e informações adicionais
-        return self.observation(), reward, self.state.time_elapsed >= self.state.time_limit or reward < -100, False, {"is_success": True}   #is success???
+        return self.observation(), reward, self.state.time_elapsed >= self.state.time_limit or reward < -700, False, {"is_success": True}   #is success???
 
     # Método (opcional) que implementa interface gráfica
     def render(self) -> RenderFrame | list[RenderFrame] | None:

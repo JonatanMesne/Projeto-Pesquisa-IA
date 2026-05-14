@@ -77,7 +77,7 @@ class Zombie(Entity):
                 state.agent.status[2] = 3  # Agent is infected for 3 turns
         else:
             zombie_direction = state.current_action_id
-            if Walk.action(state) == -100: # If the zombie cannot walk in the chosen direction, try to walk a different direction towards the agent or attack the object in front
+            if Walk.action(state) == state.invalid_return_value: # If the zombie cannot walk in the chosen direction, try to walk a different direction towards the agent or attack the object in front
                 if zombie_direction == 1 or zombie_direction == 3:
                     if distance_to_agent[1] < 0:
                         state.current_action_id = 4  # walk left
@@ -88,7 +88,7 @@ class Zombie(Entity):
                         state.current_action_id = 1  # walk up
                     elif distance_to_agent[0] > 0:
                         state.current_action_id = 3  # walk down
-                if state.current_action_id == 0 or Walk.action(state) == -100:
+                if state.current_action_id == 0 or Walk.action(state) == state.invalid_return_value:
                     # determine coordinates in front of the zombie based on its original direction
                     if zombie_direction == 1:   # up
                         new_x = self.position[0] - 1

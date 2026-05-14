@@ -6,6 +6,8 @@ from world_objects.ground import Ground
 class PickupItem(Action):   #class for picking up items
     duration = 1
     id = 26
+    
+    return_value = 100
         
     @staticmethod
     def action(state) -> int:
@@ -16,7 +18,7 @@ class PickupItem(Action):   #class for picking up items
             if item_to_pickup.__class__.__name__ == "Ammo":
                 ammo_to_pickup = item_to_pickup.ammo_count # type: ignore
                 
-                return_value = False
+                return_true = False
                 
                 # Try to fill existing ammo stacks in inventory
                 for inventory_item in state.agent.inventory:
@@ -44,11 +46,11 @@ class PickupItem(Action):   #class for picking up items
                         state.agent.standing_on = Ground()
                         if(state.prints_enabled):
                             print(f"You picked up: {item_to_pickup.__class__.__name__} (stack of {ammo_to_pickup} ammo)")
-                        return 30
-                if return_value:
+                        return PickupItem.return_value
+                if return_true:
                     if(state.prints_enabled):
                         print(f"You picked up: {item_to_pickup.__class__.__name__} (added to existing stacks)")
-                    return 30
+                    return PickupItem.return_value
                 else:
                     if(state.prints_enabled):
                         print("Cannot pick up ammo: inventory is full.")
@@ -62,7 +64,7 @@ class PickupItem(Action):   #class for picking up items
                     state.agent.standing_on = Ground()  # the agent is now standing on an empty ground tile
                     if(state.prints_enabled):
                         print(f"You picked up: {item_to_pickup.__class__.__name__}")
-                    return 30
+                    return PickupItem.return_value
                 else:
                     if(state.prints_enabled):
                         print("Cannot pick up item: inventory is full.")

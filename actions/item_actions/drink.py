@@ -15,6 +15,8 @@ class Drink(Action):     #class for the action of drinking water
             state.agent.status[0] = 0
             if(state.prints_enabled):
                 print(f"You drank water and reduced your thirst by {water.thirst_satiation}. Current thirst: {state.agent.thirst}")
+            if state.agent.thirst == state.agent.max_thirst:
+                return -10
             return water.thirst_satiation
         else:
             if(state.prints_enabled):

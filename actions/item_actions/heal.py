@@ -17,6 +17,8 @@ class Heal(Action):     #class for the action of perceiving the surroundings
             state.agent.status[2] = 0
             if(state.prints_enabled):
                 print(f"You used a medkit and healed {heal_item.heal_amount} health. Current health: {state.agent.health}") # type: ignore
+            if state.agent.health == state.agent.max_health:
+                return -10
             return heal_item.heal_amount    # type: ignore
         else:
             if(state.prints_enabled):

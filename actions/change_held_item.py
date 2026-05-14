@@ -9,6 +9,10 @@ class ChangeHeldItem(Action):     #class for the action of changing the item in 
     def action(state) -> int:
         index = state.current_action_id - ChangeHeldItem.id  # Calculate index based on action ID
         if index == 0:  # If index is 0, the agent wants to empty their hands
+            if state.agent.item_in_hand is None:
+                if(state.prints_enabled):
+                    print("Your hands are already empty.")
+                return state.invalid_return_value
             state.agent.item_in_hand = None
             if(state.prints_enabled):
                 print("You removed the item from your hands.")

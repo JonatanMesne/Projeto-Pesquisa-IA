@@ -102,7 +102,7 @@ class State:
         self.wave_count = 0
         self.time_limit = 1000
         self.zombies_killed = 0
-        self.invalid_return_value = -10000
+        self.invalid_return_value = -1000
         
     def print_self(self):
         print("Agent Direction:", self.entity_direction)
