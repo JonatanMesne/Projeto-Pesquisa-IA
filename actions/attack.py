@@ -7,36 +7,44 @@ from world_objects.ground import Ground
 class Attack(Action):     #class for the action of perceiving the surroundings
     duration = 1
     need_direction = True
-    id = 9  #to 12
+    id = 22  #to 
+    
+    failed_attack_return_value = -100
 
     @staticmethod
     def action(state) -> int:
         hit = False
         damage_total = 0           # keep track of total damage dealt
-        entity_direction = state.current_action_id - Attack.id  # Calculate direction based on action ID
+        entity_direction = (state.current_action_id - Attack.id) % 4  # Calculate direction based on action ID
 
-        if not isinstance(state.agent.item_in_hand, (MeleeWeapon, RangedWeapon)):
+        if state.current_action_id > Attack.id + 3:
+            weapon = state.agent.ranged_weapon
+            if weapon is None:
+                if(state.prints_enabled):
+                    print("Attack failed: no ranged weapon equipped.")
+                return state.invalid_return_value
+            if weapon.ammo <= 0:
+                if(state.prints_enabled):
+                    print("Attack failed: no ammo.")
+                return state.invalid_return_value  # No ammo, cannot attack
+            
+            weapon_range = weapon.range
+            damage = weapon.damage
+            pierce = weapon.pierce
+            fire_rate = weapon.fire_rate
+            knockback = 0
+        elif state.agent.melee_weapon is not None:
+            weapon_range = state.agent.melee_weapon.range
+            damage = state.agent.melee_weapon.damage
+            pierce = 99
+            fire_rate = 1
+            knockback = state.agent.melee_weapon.knockback
+        else:
             pierce = 99
             fire_rate = 1
             damage = 5
             weapon_range = 1
             knockback = 1
-        else:
-            weapon_range = state.agent.item_in_hand.range
-            damage = state.agent.item_in_hand.damage
-            if isinstance(state.agent.item_in_hand, RangedWeapon):
-                if state.agent.item_in_hand.ammo > 0:
-                    pierce = state.agent.item_in_hand.pierce
-                    fire_rate = state.agent.item_in_hand.fire_rate
-                    knockback = 0
-                else:
-                    if(state.prints_enabled):
-                        print("Attack failed: no ammo.")
-                    return state.invalid_return_value  # No ammo, cannot attack
-            else:
-                pierce = 99
-                fire_rate = 1
-                knockback = state.agent.item_in_hand.knockback
 
         direction_array = [0, 0]
         #direction = 0 (up) | 1 (right) | 2 (down) | 3 (left)
@@ -52,14 +60,17 @@ class Attack(Action):     #class for the action of perceiving the surroundings
         for _ in range(fire_rate):
             # track entities hit this shot (in order from nearest to farthest)
             hits = []  # list of (entity, position)
-            if isinstance(state.agent.item_in_hand, RangedWeapon):
-                state.agent.item_in_hand.ammo -= 1
+            if state.current_action_id > Attack.id + 3:
+                state.agent.ranged_weapon.ammo -= 1
             for j in range(weapon_range):
                 target_position = [state.agent.position[0] + direction_array[0] * (j + 1), 
                                    state.agent.position[1] + direction_array[1] * (j + 1)]
                 if (target_position[0] < 0 or target_position[0] >= len(state.world.grid) or
                     target_position[1] < 0 or target_position[1] >= len(state.world.grid[0])):
-                    break  # Out of bounds
+                    if j == 0:
+                        return state.invalid_return_value  # Attack in invalid direction
+                    else:
+                        break  # Out of bounds
                 target_cell = state.world.grid[target_position[0]][target_position[1]]
                 if isinstance(target_cell, Entity):
                     # apply damage
@@ -113,7 +124,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
         if not hit:
             if(state.prints_enabled):
                 print("Your attack missed.")
-            return state.invalid_return_value
+            return Attack.failed_attack_return_value
 
         if(state.prints_enabled):
             print(f"You dealt {damage_total} total damage.")

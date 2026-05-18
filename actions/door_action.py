@@ -3,7 +3,7 @@ from actions.action import Action
 class DoorAction(Action):   #class for opening and closing doors
     duration = 1
     need_direction = True
-    id = 17 #to 20
+    id = 13 #to 16
         
     @staticmethod
     def action(state) -> int:

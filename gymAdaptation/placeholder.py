@@ -19,7 +19,7 @@ class Placeholder(gym.Env):
         self.state.reset(seed=self.seed, player_controlled=False, time_limit=self.time_limit)
         
         #o gemini criticou o action space ser apenas discreto
-        self.action_space = spaces.Discrete(28 + Agent.max_inventory_space * 2)   #28 standard actions + change held item for each inventory slot + drop item for each inventory slot
+        self.action_space = spaces.Discrete(self.state.greatest_action_id + 1)
         
         # vision_data = []    #created separately because it can't be a ndarray, it needs to be a list of lists
         # for i in range(self.state.agent.vision_range*2+1):
@@ -35,9 +35,9 @@ class Placeholder(gym.Env):
             "hunger": spaces.Discrete(self.state.agent.max_hunger + 1),   #agent's hunger
             "thirst": spaces.Discrete(self.state.agent.max_thirst + 1),   #agent's thirst
             "status": spaces.MultiBinary(len(self.state.agent.possible_status_effects)),   #agent's status effects (binary vector indicating whether the agent is affected by each possible status effect)
-            "inventory": spaces.MultiDiscrete(np.full((Agent.max_inventory_space,), self.state.greatest_WO_id + 1)),   #ids of the world objects in the agent's inventory
-            "inventory_space_used": spaces.Discrete(Agent.max_inventory_space + 1),   #agent's used inventory space
-            "item_in_hand": spaces.Discrete(self.state.greatest_WO_id + 1),   #id of the world object the agent is currently holding in their hand (or -1 if empty)
+            "inventory": spaces.MultiDiscrete(np.full((4,), self.state.agent.max_inventory_qtt[3])),   #maximum qtt for each type of item in inventory (ammo, medkits, food, water)
+            "melee_weapon": spaces.Discrete(self.state.greatest_WO_id + 1),   #id of the melee weapon the agent is currently holding (or 0 if empty)
+            "ranged_weapon": spaces.Discrete(self.state.greatest_WO_id + 1),   #id of the ranged weapon the agent is currently holding (or 0 if empty)
             "possible_actions": spaces.MultiBinary(self.state.greatest_action_id + 1)   #binary vector indicating which actions are currently possible for the agent to perform (based on the current state and the agent's inventory and status)
         })
         
@@ -45,9 +45,6 @@ class Placeholder(gym.Env):
     def observation(self) -> dict[str, Any]:
         UpdateVision().action(self.state) #update the agent vision
         self.state.agent.update_possible_actions(self.state)   #update possible actions after vision update
-        inventory = np.full((Agent.max_inventory_space,), 0)
-        for i in range(len(self.state.agent.inventory)):
-            inventory[i] = self.state.agent.inventory[i].id
         possible_actions = np.full((self.state.greatest_action_id + 1,), 0, np.int8)
         for action_id in self.state.agent.possible_actions:
             possible_actions[action_id] = 1
@@ -60,9 +57,9 @@ class Placeholder(gym.Env):
             "hunger": self.state.agent.hunger,   #agent's hunger
             "thirst": self.state.agent.thirst,   #agent's thirst
             "status": np.array(self.state.agent.status, dtype=np.int8),   #agent's status effects (binary vector indicating whether the agent is affected by each possible status effect)
-            "inventory": inventory,   #ids of the world objects in the agent's inventory
-            "inventory_space_used": self.state.agent.inventory_space_used,   #agent's used inventory space
-            "item_in_hand": self.state.agent.item_in_hand.id if self.state.agent.item_in_hand else 0,   #id of the world object the agent is currently holding in their hand (or -1 if empty)
+            "inventory": np.array(self.state.agent.inventory_qtt),   #ids of the world objects in the agent's inventory
+            "melee_weapon": self.state.agent.melee_weapon.id if self.state.agent.melee_weapon is not None else 0,   #id of the melee weapon the agent is currently holding (or 0 if empty)
+            "ranged_weapon": self.state.agent.ranged_weapon.id if self.state.agent.ranged_weapon is not None else 0,   #id of the ranged weapon the agent is currently holding (or 0 if empty)
             "possible_actions": possible_actions   #binary vector indicating which actions are currently possible for the agent to perform (based on the current state and the agent's inventory and status)
         }
         return obs

@@ -10,7 +10,7 @@
 
 # from state import State
 
-#direction = 1 (up) | 2 (right) | 3 (down) | 4 (left)
+# direction = 1 (up) | 2 (right) | 3 (down) | 4 (left)
 # UP = 1
 # RIGHT = 2
 # DOWN = 3
@@ -19,15 +19,15 @@
 # estado = State()
 
 # while True:
-    # estado.reset(seed='', player_controlled=True, time_limit=1000)
+#     estado.reset(seed='', player_controlled=True, time_limit=1000)
 
-    # print(estado.world)
+#     print(estado.world)
 
-    # estado.agent.inventory = [Ammo(), Medkit(), Food(), Water(), BaseballBat(), Knife(), Pistol(), Smg()]
+#     estado.agent.inventory = [Ammo(), Medkit(), Food(), Water(), BaseballBat(), Knife(), Pistol(), Smg()]
 
-    # estado.environment_start()
-    # input("\n################################  Environment ended. Press Enter to reset the environment and start again...  ################################")
-    # estado.environment_start()
+#     estado.environment_start()
+#     input("\n################################  Environment ended. Press Enter to reset the environment and start again...  ################################")
+#     estado.environment_start()
     
 
 

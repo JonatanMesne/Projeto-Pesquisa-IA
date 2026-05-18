@@ -135,7 +135,7 @@ class World:
     def place_items(self):
         for i in range(len(self.grid)):
             for j in range(len(self.grid[0])):
-                if self.grid[i][j].__class__.__name__ == 'Item':
+                if isinstance(self.grid[i][j], Item):
                     item = self.choose_item()
                     self.grid[i][j] = item
             

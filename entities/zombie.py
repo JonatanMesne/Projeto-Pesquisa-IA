@@ -1,3 +1,4 @@
+from entities.agent import Agent
 from entities.entity import Entity
 from actions.update_vision import UpdateVision
 from actions.walk import Walk
@@ -36,9 +37,9 @@ class Zombie(Entity):
         if(state.prints_enabled):
             print("\nZombie killed!!!")
         # get item from state world
-        if self.standing_on.__class__.__name__ == "Ground":
+        if isinstance(self.standing_on, Ground):
             self.standing_on = state.world.choose_item(self.item_drop_chance)
-            if self.standing_on.__class__.__name__ == "Ground":    
+            if not isinstance(self.standing_on, Ground):    
                 if(state.prints_enabled):
                     print("\nItem dropped: ", self.standing_on)
         
@@ -51,7 +52,7 @@ class Zombie(Entity):
         for i in range(len(self.vision_data)):
             for j in range(len(self.vision_data[i])):
                 obj = self.vision_data[i][j]
-                if obj is not None and obj.__class__.__name__ == "Agent":
+                if isinstance(obj, Agent):
                     distance_to_agent[0] = obj.position[0] - self.position[0]
                     distance_to_agent[1] = obj.position[1] - self.position[1]
                     if abs(distance_to_agent[0]) >= abs(distance_to_agent[1]):

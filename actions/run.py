@@ -7,6 +7,7 @@ class Run(Action):     #class for the action of running a few tiles
     id = 5  #to 8
     
     run_distance = 3
+    stamina_cost = 5
 
     @staticmethod
     def action(state) -> int:
@@ -14,9 +15,9 @@ class Run(Action):     #class for the action of running a few tiles
         if state.agent.status[3] == 0:
             state.current_action_id = state.current_action_id - 4  # Adjust the action ID to correspond to walking in the same direction
             for _ in range(Run.run_distance):
-                if state.agent.stamina >= 5:
+                if state.agent.stamina >= Run.stamina_cost:
                     if Walk.action(state) == 5:
-                        state.agent.stamina -= 5
+                        state.agent.stamina -= Run.stamina_cost
                         return_value += 3
                     else:
                         break

@@ -1,16 +1,17 @@
 from actions.action import Action
+from items.ammo import Ammo
+from items.weapons.ranged import RangedWeapon
 
 class Reload(Action):     #class for the action of reloading a weapon
     duration = 1
-    id = 24
+    id = 20
 
     @staticmethod
     def action(state) -> int:
-        weapon = state.agent.item_in_hand
-        if any(base.__name__ == "RangedWeapon" for base in type(weapon).mro()): #check if item in hand is a ranged weapon (or subclass of)
-            # Already full
+        weapon = state.agent.ranged_weapon
+        if isinstance(weapon, RangedWeapon):
             needed = weapon.ammo_capacity - weapon.ammo
-            if needed <= 0:
+            if needed <= 0:     # Already full
                 if(state.prints_enabled):
                     print("Your weapon is already fully loaded.")
                 return state.invalid_return_value
@@ -19,7 +20,7 @@ class Reload(Action):     #class for the action of reloading a weapon
 
             # Iterate over a copy since we may remove empty stacks
             for inv_item in state.agent.inventory[:]:
-                if not inv_item.__class__.__name__ == "Ammo":
+                if not isinstance(inv_item, Ammo):
                     continue
 
                 take = min(inv_item.ammo_count, needed)
@@ -31,7 +32,7 @@ class Reload(Action):     #class for the action of reloading a weapon
                 # remove stack if emptied
                 if inv_item.ammo_count == 0:
                     state.agent.inventory.remove(inv_item)
-                    state.agent.inventory_space_used -= inv_item.inventory_space
+                    state.agent.invetory_qtt[0] -= 1
 
                 if needed == 0:
                     break

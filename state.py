@@ -8,10 +8,7 @@ from actions.item_actions.drink import Drink
 from actions.item_actions.eat import Eat
 from actions.item_actions.heal import Heal
 from actions.item_actions.reload import Reload
-from actions.item_actions.unload import Unload
 from actions.pickup_item import PickupItem
-from actions.change_held_item import ChangeHeldItem
-from actions.drop_item import DropItem
 from actions.action import Action
 
 from actions.update_vision import UpdateVision
@@ -32,47 +29,44 @@ class State:
         6,  #run right
         7,  #run down
         8,  #run left
-        9,  #attack up
-        10,  #attack right
-        11,  #attack down
-        12,  #attack left
-        13,  #climb up
-        14,  #climb right
-        15,  #climb down
-        16,  #climb left
-        17,  #door_action up
-        18,  #door_action right
-        19,  #door_action down
-        20,  #door_action left
-        21,  #drink
-        22,  #eat
-        23,  #heal
-        24,  #reload
-        25,  #unload
-        26  #pickup_item
+        9,  #climb up
+        10,  #climb right
+        11,  #climb down
+        12,  #climb left
+        13,  #door_action up
+        14,  #door_action right
+        15,  #door_action down
+        16,  #door_action left
+        17,  #drink
+        18,  #eat
+        19,  #heal
+        20,  #reload
+        21,  #pickup_item
+        22,  #attack up with melee
+        23,  #attack right with melee
+        24,  #attack down with melee
+        25,  #attack left with melee
+        26,  #attack up with ranged
+        27,  #attack right with ranged
+        28,  #attack down with ranged
+        29,  #attack left with ranged
     ]
-    for i in range(27, 28 + Agent.max_inventory_space):   #adding change_held_item ids for every inventory slot
-        all_possible_agent_actions_ids.append(i)
-    for i in range(28 + Agent.max_inventory_space, 28 + Agent.max_inventory_space * 2):   #adding drop_item ids for every inventory slot
-        all_possible_agent_actions_ids.append(i)
     
     all_possible_agent_actions = [
         Idle, #id 0
         Walk, #id 1-4
         Run, #id 5-8
-        Attack, #id 9-12
-        Climb, #id 13-16
-        DoorAction, #id 17-20
-        Drink, #id 21
-        Eat, #id 22
-        Heal, #id 23
-        Reload, #id 24
-        Unload, #id 25
-        PickupItem, #id 26
-        ChangeHeldItem, #id 27 - 27+Agent.max_inventory_space
-        DropItem, #id 27+Agent.max_inventory_space + 1 - 27 + 1 +Agent.max_inventory_space*2
+        Climb, #id 9-12
+        DoorAction, #id 13-16
+        Drink, #id 17
+        Eat, #id 18
+        Heal, #id 19
+        Reload, #id 20
+        PickupItem, #id 21
+        Attack, #id 22-25 (attack up, right, down, left) with melee and id 26-29 with ranged
         Action #id 999
     ]
+    greatest_action_id = 29
     
     def get_action(self, action_id):
         for i in range(len(self.all_possible_agent_actions)):
@@ -81,7 +75,6 @@ class State:
         return None #should never reach this
     
     greatest_WO_id = 42
-    greatest_action_id = 28 + Agent.max_inventory_space * 2 - 1
     def __init__(self, prints_enabled = False):
         self.prints_enabled = prints_enabled
         self.agent: Agent
@@ -231,11 +224,11 @@ class State:
         return reward
         
     def entity_death(self, entity) -> int:
-        if entity.__class__.__name__ == "Zombie":
+        if isinstance(entity, Zombie):
             entity.zombie_death(self)
             self.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
             return 0
-        elif entity.__class__.__name__ == "Agent":
+        elif isinstance(entity, Agent):
             return -1000
         return 1
         
