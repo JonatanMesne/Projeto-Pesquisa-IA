@@ -32,7 +32,7 @@ class Reload(Action):     #class for the action of reloading a weapon
                 # remove stack if emptied
                 if inv_item.ammo_count == 0:
                     state.agent.inventory.remove(inv_item)
-                    state.agent.invetory_qtt[0] -= 1
+                    state.agent.inventory_qtt[0] -= 1
 
                 if needed == 0:
                     break
