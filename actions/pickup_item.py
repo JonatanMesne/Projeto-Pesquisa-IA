@@ -22,13 +22,19 @@ class PickupItem(Action):   #class for picking up items
             if isinstance(item_to_pickup, RangedWeapon):
                 if state.agent.ranged_weapon is not None:
                     state.agent.standing_on = state.agent.ranged_weapon
-                state.agent.ranged_weapon = item_to_pickup
-                return PickupItem.return_value
+                    state.agent.ranged_weapon = item_to_pickup
+                    return 0
+                else: 
+                    state.agent.ranged_weapon = item_to_pickup
+                    return PickupItem.return_value * 2
             elif isinstance(item_to_pickup, MeleeWeapon):
                 if state.agent.melee_weapon is not None:
                     state.agent.standing_on = state.agent.melee_weapon
-                state.agent.melee_weapon = item_to_pickup
-                return PickupItem.return_value
+                    state.agent.melee_weapon = item_to_pickup
+                    return 0
+                else:
+                    state.agent.melee_weapon = item_to_pickup
+                    return PickupItem.return_value * 2
             elif isinstance(item_to_pickup, Ammo):  # Handle ammo stacking
                 ammo_to_pickup = item_to_pickup.ammo_count # type: ignore
                 
