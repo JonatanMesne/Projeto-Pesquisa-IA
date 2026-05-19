@@ -91,8 +91,8 @@ print(f"PPO_COUNT from .env: {ppo_count}")
 env = gym.make("zombie-survival-v0")
 check_env(env)
 
-# model = PPO.load(f"models/zombie_survival_ppo{(ppo_count-1)%4}")
-# render_env(env, model, sleep_time=0.25)
+model = PPO.load(f"models/zombie_survival_ppo{(ppo_count-1)%4}")
+render_env(env, model, sleep_time=0.25)
 
 while(ppo_count < 100): #roughly 10 hours of training
     print(f"Starting PPO training with count: {ppo_count}")
