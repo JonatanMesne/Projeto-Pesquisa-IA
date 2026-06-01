@@ -9,7 +9,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
     need_direction = True
     id = 22  #to 
     
-    failed_attack_return_value = -100
+    failed_attack_return_value = -500
 
     @staticmethod
     def action(state) -> int:
@@ -95,7 +95,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     if dmg <= 0:
                         dmg = 1  # Ensure at least 1 damage is dealt to walls
                     target_cell.durability -= dmg
-                    damage_total += dmg
+                    damage_total += 0.1 
                     if target_cell.durability <= 0:
                         state.world.grid[target_position[0]][target_position[1]] = Ground()  # Replace with a passable ground tile
                         if(state.prints_enabled):

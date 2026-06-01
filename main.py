@@ -10,7 +10,7 @@
 
 # from state import State
 
-# direction = 1 (up) | 2 (right) | 3 (down) | 4 (left)
+# # direction = 1 (up) | 2 (right) | 3 (down) | 4 (left)
 # UP = 1
 # RIGHT = 2
 # DOWN = 3
@@ -21,13 +21,13 @@
 # while True:
 #     estado.reset(seed='', player_controlled=True, time_limit=1000)
 
-#     print(estado.world)
+#     # print(estado.world)
 
-#     estado.agent.inventory = [Ammo(), Medkit(), Food(), Water(), BaseballBat(), Knife(), Pistol(), Smg()]
+#     # estado.agent.inventory = [Ammo(), Medkit(), Food(), Water(), BaseballBat(), Knife(), Pistol(), Smg()]
 
 #     estado.environment_start()
 #     input("\n################################  Environment ended. Press Enter to reset the environment and start again...  ################################")
-#     estado.environment_start()
+#     # estado.environment_start()
     
 
 
@@ -83,6 +83,7 @@ ppo_count = os.getenv("PPO_COUNT")
 if ppo_count is None:
     ppo_count = 0
 else:
+
     ppo_count = int(ppo_count)
 print(f"PPO_COUNT from .env: {ppo_count}")
 
@@ -94,7 +95,7 @@ check_env(env)
 # model = PPO.load(f"models/zombie_survival_ppo{(ppo_count-1)%4}")
 # render_env(env, model, sleep_time=0.25)
 
-while(ppo_count < 100): #roughly 10 hours of training
+while(True):
     print(f"Starting PPO training with count: {ppo_count}")
     model = PPO.load(f"models/zombie_survival_ppo{ppo_count%4}", env=env)
     model.learn(total_timesteps=75000, log_interval=5) #roughly 6 minutes of training per iteration
@@ -105,13 +106,6 @@ while(ppo_count < 100): #roughly 10 hours of training
         value_to_set=f"{ppo_count}"
     )
     model.save(f"models/zombie_survival_ppo{ppo_count%4}")
-    if ppo_count == 24:
-        model.save(f"models/zombie_survival_ppo25%")
-    if ppo_count == 49:
-        model.save(f"models/zombie_survival_ppo50%")
-    if ppo_count == 74:
-        model.save(f"models/zombie_survival_ppo75%")
-    if ppo_count == 99:
-        model.save(f"models/zombie_survival_ppo100%")
+    if (ppo_count + 1) % 25 == 0:
+        model.save(f"models/zombie_survival_ppo{ppo_count + 1}%")
     print(f"Saved PPO model with count: {ppo_count%4}")
-    # time.sleep(60)  # Sleep for 60 seconds before the next training iteration to end the training session safely
