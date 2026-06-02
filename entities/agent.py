@@ -151,6 +151,23 @@ class Agent(Entity):
             self.possible_actions.append(Reload.id)
                     
         self.possible_actions.sort()
+
+    def print_achievements(self, state):
+        print("\nAchievements:")
+        if state.zombies_killed >= state.zombies_killed_achievement_thresholds[0]:
+            print(f"- Zombie Slayer: Killed {state.zombies_killed} zombies")
+        if state.doors_opened >= state.doors_opened_achievement_thresholds[0]:
+            print(f"- Explorer: Opened {state.doors_opened} doors")
+        if state.melee_kills >= state.melee_kills_achievement_thresholds[0]:
+            print(f"- Melee Master: Killed {state.melee_kills} enemies with melee weapons")
+        if state.ranged_kills >= state.ranged_kills_achievement_thresholds[0]:
+            print(f"- Sharpshooter: Killed {state.ranged_kills} enemies with ranged weapons")
+        if state.food_eaten >= state.food_eaten_achievement_thresholds[0]:
+            print(f"- Foodie: Ate {state.food_eaten} food items")
+        if state.water_drank >= state.water_drank_achievement_thresholds[0]:
+            print(f"- Hydrated: Drank {state.water_drank} water items")
+        if state.medkits_used >= state.medkits_used_achievement_thresholds[0]:
+            print(f"- Healer: Used {state.medkits_used} medkits")
                     
     def print_actions(self, state):
         print("\nPossible Actions:")
@@ -182,6 +199,7 @@ class Agent(Entity):
         self.print_status(state)
         self.print_inventory()
         self.update_possible_actions(state)
+        self.print_achievements(state)
         self.print_actions(state)
         
     def choose_action(self, state) -> bool:

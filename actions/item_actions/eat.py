@@ -18,8 +18,9 @@ class Eat(Action):     #class for the action of eating food
             state.food_eaten += 1
             if(state.prints_enabled):
                 print(f"You ate food and reduced your hunger by {food.hunger_satiation}. Current hunger: {state.agent.hunger}")
-            if state.food_eaten == 1:
-                return state.achievement_reward + hunger_satiation * 4
+            for i in range(len(state.food_eaten_achievement_thresholds)):
+                if state.food_eaten == state.food_eaten_achievement_thresholds[i]:
+                    return state.achievement_reward * (i + 1) + hunger_satiation * 4
             if hunger_satiation == food.hunger_satiation:
                 return hunger_satiation * 4
             return hunger_satiation * 2

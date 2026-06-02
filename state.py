@@ -103,6 +103,12 @@ class State:
         self.food_eaten = 0
         self.medkits_used = 0
         self.zombies_killed_achievement_thresholds = [1, 10, 25, 50]
+        self.doors_opened_achievement_thresholds = [1, 5, 15, 30]
+        self.melee_kills_achievement_thresholds = [1, 5, 10, 25]
+        self.ranged_kills_achievement_thresholds = [1, 5, 10, 25]
+        self.food_eaten_achievement_thresholds = [1, 5, 10, 25]
+        self.water_drank_achievement_thresholds = [1, 5, 10, 25]
+        self.medkits_used_achievement_thresholds = [1, 5, 10, 25]
         self.achievement_reward = 500
         
     def print_self(self):
@@ -117,7 +123,7 @@ class State:
         self.zombies = []
         self.action_zombie = None
         self.world = World()
-        if self.agent.vision_range != 0:
+        if agent_vision_range != 0:
             self.agent.vision_range = min(agent_vision_range, self.world.chunk_size * max(self.world.length, self.world.height))
         self.current_action_id = -1
         self.time_elapsed = 0

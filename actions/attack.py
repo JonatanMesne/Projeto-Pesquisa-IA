@@ -82,18 +82,22 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                         return_value = 0
                         if state.current_action_id > Attack.id + 3:
                             state.ranged_kills += 1
-                            if state.ranged_kills == 1:
-                                return_value = state.achievement_reward
+                            for i in range(len(state.ranged_kills_achievement_thresholds)):
+                                if state.ranged_kills == state.ranged_kills_achievement_thresholds[i]:
+                                    return_value += (state.achievement_reward * (i + 1))
+                                    break
                         else:
                             state.melee_kills += 1
-                            if state.melee_kills == 1:
-                                return_value = state.achievement_reward
+                            for i in range(len(state.melee_kills_achievement_thresholds)):
+                                if state.melee_kills == state.melee_kills_achievement_thresholds[i]:
+                                    return_value += (state.achievement_reward * (i + 1))
+                                    break
                         # entity died — remove from map
                         if state.entity_death(target_cell) == 10:  # Zombie death
                             achievement = False
-                            for i in range(state.zombies_killed_achievement_threshold):
-                                if state.zombies_killed == state.zombies_killed_achievement_threshold[i]:
-                                    return_value += (state.achievement_reward * i)
+                            for i in range(len(state.zombies_killed_achievement_thresholds)):
+                                if state.zombies_killed == state.zombies_killed_achievement_thresholds[i]:
+                                    return_value += (state.achievement_reward * (i + 1))
                                     achievement = True
                                     break
                             if not achievement:
@@ -146,4 +150,4 @@ class Attack(Action):     #class for the action of perceiving the surroundings
 
         if(state.prints_enabled):
             print(f"You dealt {damage_total} total damage.")
-        return damage_total * 10
+        return int(damage_total * 10)
