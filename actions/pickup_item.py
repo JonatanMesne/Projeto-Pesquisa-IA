@@ -12,7 +12,7 @@ class PickupItem(Action):   #class for picking up items
     duration = 1
     id = 21
     
-    return_value = 100
+    return_value = 250
         
     @staticmethod
     def action(state) -> int:
@@ -25,6 +25,7 @@ class PickupItem(Action):   #class for picking up items
                     state.agent.ranged_weapon = item_to_pickup
                     return 0
                 else: 
+                    state.agent.standing_on = Ground()
                     state.agent.ranged_weapon = item_to_pickup
                     return PickupItem.return_value * 2
             elif isinstance(item_to_pickup, MeleeWeapon):
@@ -33,6 +34,7 @@ class PickupItem(Action):   #class for picking up items
                     state.agent.melee_weapon = item_to_pickup
                     return 0
                 else:
+                    state.agent.standing_on = Ground()
                     state.agent.melee_weapon = item_to_pickup
                     return PickupItem.return_value * 2
             elif isinstance(item_to_pickup, Ammo):  # Handle ammo stacking

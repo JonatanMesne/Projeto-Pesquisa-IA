@@ -81,15 +81,14 @@ class Agent(Entity):
             print("Inventory is empty.")
         else:
             for item in self.inventory:
-                item.print_info()
+                print(item.item_info())
         print(f"\nMelee Weapon: {self.melee_weapon.__class__.__name__ if self.melee_weapon else 'Fists'}")
         print(f"Ranged Weapon: {self.ranged_weapon.__class__.__name__ if self.ranged_weapon else 'None'}")
             
     def update_possible_actions(self, state):
         self.possible_actions = []
         
-        if self.stamina + Idle.stamina_recovery < self.max_stamina:
-            self.possible_actions.append(Idle.id)
+        self.possible_actions.append(Idle.id)
         
         #world object dependent actions
         world_objects = []
