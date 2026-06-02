@@ -79,8 +79,26 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     damage_total += damage
                     pierce -= 1
                     if target_cell.health <= 0:
+                        return_value = 0
+                        if state.current_action_id > Attack.id + 3:
+                            state.ranged_kills += 1
+                            if state.ranged_kills == 1:
+                                return_value = state.achievement_reward
+                        else:
+                            state.melee_kills += 1
+                            if state.melee_kills == 1:
+                                return_value = state.achievement_reward
                         # entity died — remove from map
-                        state.entity_death(target_cell)
+                        if state.entity_death(target_cell) == 10:  # Zombie death
+                            achievement = False
+                            for i in range(state.zombies_killed_achievement_threshold):
+                                if state.zombies_killed == state.zombies_killed_achievement_threshold[i]:
+                                    return_value += (state.achievement_reward * i)
+                                    achievement = True
+                                    break
+                            if not achievement:
+                                return_value += 100
+                        damage_total += return_value // 10  # Convert back to damage for consistent return value
                         if(state.prints_enabled):
                             print(f"{target_cell.__class__.__name__} has been defeated.")
                     else:

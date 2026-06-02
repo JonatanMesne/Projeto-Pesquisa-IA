@@ -40,5 +40,5 @@ class Walk(Action):     #class for the action of walking 1 tile
         state.world.grid[next_position[0]][next_position[1]] = entity
         entity.position = next_position
         # print("Walked to position:", entity.position)
-        return 5
+        return 10
         

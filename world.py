@@ -31,10 +31,13 @@ class World:
                 self.grid[chunk_x].append(Ground())
             chunk_x += 1
         
-    def generate_seed(self):
+    @staticmethod
+    def generate_seed():
+        seed = ''
         for _ in range(16):
-            self.seed += str(random.randint(0, 9))
-    
+            seed += str(random.randint(0, 9))
+        return seed
+
     def generate_new_seed(self):
         new_seed = ''
         for i in range(0, len(self.seed), 4):
@@ -160,14 +163,14 @@ class World:
 
     def generate_map(self, state, seed = None):
         if(seed == None):
-            self.generate_seed()
+            self.seed = self.generate_seed()
         else: #check seed
             self.seed = ''
             for number in seed:
                 if number >= '0' and number <= '9':
                     self.seed += number
             if len(self.seed) == 0:
-                self.generate_seed()
+                self.seed = self.generate_seed()
             
         if(state.prints_enabled):
             print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSeed:", self.seed)

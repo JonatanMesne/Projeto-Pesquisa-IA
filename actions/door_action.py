@@ -30,13 +30,22 @@ class DoorAction(Action):   #class for opening and closing doors
                 world_object.appearence = 'd'  #Open door
                 world_object.is_solid = False
                 world_object.id = 15  #Change ID to represent open door
+                if(state.prints_enabled):
+                    print(f"You opened the door.")
+                if world_object.opened_by_agent == False:
+                    world_object.opened_by_agent = True
+                    state.doors_opened += 1
+                    if state.doors_opened == 1:
+                        return state.achievement_reward // 2
+                    return 30
+                return 0
             else:
                 world_object.appearence = 'D'  #Closed door
                 world_object.is_solid = True
                 world_object.id = 14  #Change ID back to represent closed door
-            if(state.prints_enabled):
-                print(f"You {'opened' if not world_object.is_solid else 'closed'} the door.")
-            return 0
+                if(state.prints_enabled):
+                    print(f"You closed the door.")
+                return 0
         else:
             if(state.prints_enabled):
                 print("There is no door in that direction.")

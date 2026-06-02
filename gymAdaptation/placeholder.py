@@ -8,16 +8,18 @@ from gymnasium.core import ObsType, ActType, RenderFrame
 from actions.update_vision import UpdateVision
 from entities.agent import Agent
 from state import State
+from world import World
 
 class Placeholder(gym.Env):
     # Inicializa um novo ambiente de simulação
-    def __init__(self, seed=None, time_limit=1000, render_mode=None):
-        self.render_mode = render_mode
+    def __init__(self, seed=None, time_limit=1000, set_seed = False, agent_vision_range = 0):
         self.seed = seed
+        if seed is None and set_seed:
+            self.seed = World.generate_seed()
         self.time_limit = time_limit
         self.state = State()
+        self.state.agent.vision_range = agent_vision_range
         self.state.reset(seed=self.seed, player_controlled=False, time_limit=self.time_limit)
-        
         #o gemini criticou o action space ser apenas discreto
         self.action_space = spaces.Discrete(self.state.greatest_action_id + 1)
         
@@ -66,7 +68,7 @@ class Placeholder(gym.Env):
 
     # Método usado para iniciar uma nova simulação a partir de um estado inicial até o turno do agente
     def reset(self, *, seed: int | None = None, options: dict[str, Any] | None = None) -> tuple[Any, dict[str, Any]]:
-        super().reset(seed=seed)    #what does this do???
+        super().reset(seed=seed)   
         self.state.reset(seed=self.seed, player_controlled=False, time_limit=self.time_limit)
         # O segundo argumento refere-se a alguma informação adicional repassada para o agente
         return self.observation(), dict()

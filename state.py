@@ -94,8 +94,16 @@ class State:
         self.thirst_threshold = 80
         self.wave_count = 0
         self.time_limit = 1000
-        self.zombies_killed = 0
         self.invalid_return_value = -1000
+        self.zombies_killed = 0
+        self.doors_opened = 0
+        self.melee_kills = 0
+        self.ranged_kills = 0
+        self.water_drank = 0
+        self.food_eaten = 0
+        self.medkits_used = 0
+        self.zombies_killed_achievement_thresholds = [1, 10, 25, 50]
+        self.achievement_reward = 500
         
     def print_self(self):
         print("Agent Direction:", self.entity_direction)
@@ -103,18 +111,27 @@ class State:
         for row in self.world.grid:
             print(' '.join(row.appearence for row in row))
     
-    def reset(self, seed=None, player_controlled=False, time_limit=1000):
+    def reset(self, seed=None, player_controlled=False, time_limit=1000, agent_vision_range=0):
         self.entity_direction = 0
         self.agent = Agent(player_controlled=player_controlled)
         self.zombies = []
         self.action_zombie = None
         self.world = World()
+        if self.agent.vision_range != 0:
+            self.agent.vision_range = min(agent_vision_range, self.world.chunk_size * max(self.world.length, self.world.height))
         self.current_action_id = -1
         self.time_elapsed = 0
         self.index = -1
         self.wave_count = 0
         self.time_limit = time_limit
         self.world.generate_map(self, seed=seed)
+        self.zombies_killed = 0
+        self.doors_opened = 0
+        self.melee_kills = 0
+        self.ranged_kills = 0
+        self.water_drank = 0
+        self.food_eaten = 0
+        self.medkits_used = 0
 
         # self.agent.print_agent_info(self)
         # input("Press Enter to generate the map and start the environment...")
@@ -227,7 +244,7 @@ class State:
         if isinstance(entity, Zombie):
             entity.zombie_death(self)
             self.world.grid[entity.position[0]][entity.position[1]] = entity.standing_on
-            return 0
+            return 10
         elif isinstance(entity, Agent):
             return -1000
         return 1
