@@ -12,7 +12,7 @@ class PickupItem(Action):   #class for picking up items
     duration = 1
     id = 21
     
-    return_value = 250
+    return_value = 500
         
     @staticmethod
     def action(state) -> int:
