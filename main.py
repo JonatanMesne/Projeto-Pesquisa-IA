@@ -44,18 +44,38 @@ from pathlib import Path
 
 from state import State
 
-def render_env(env, model, sleep_time=1.0):
+def render_env(env, model, sleep_time=1.0, result_time = 1.0):
     obs, info = env.reset()
     estado = State()
-    while True:
-        action, _states = model.predict(obs, deterministic=False)
-        obs, reward, terminated, truncated, info = env.step(action)
-        env.render()
-        print(f"Reward: {reward} (invalid reward: {estado.invalid_return_value})")
-        print(f"Action taken: {action}")
-        time.sleep(sleep_time)  # Adjust the sleep time as needed for better visualization
-        if terminated or truncated:
-            obs, info = env.reset()
+    total_achievement_count = 0
+    total_reward_count = 0
+    for _ in range(20):
+        reward_count = 0
+        while(True):
+            action, _states = model.predict(obs, deterministic=False)
+            obs, reward, terminated, truncated, info = env.step(action)
+            env.render()
+            reward_count += reward
+            print(f"Reward: {reward} (invalid reward: {estado.invalid_return_value})")
+            print(f"Action taken: {action}")
+            time.sleep(sleep_time)  # Adjust the sleep time as needed for better visualization
+            if truncated:
+                obs, info = env.reset()
+            if terminated:
+                total = 0
+                for key, information in info.items():
+                    print(f"{key}: {information}")
+                    total += information
+                print(f"Total: {total}")
+                total_achievement_count += total
+                print(f"Reward total: {reward_count}")
+                total_reward_count += reward_count
+                time.sleep(result_time)
+                obs, info = env.reset()
+                break
+    print(f"Total achievement count: {total_achievement_count}")
+    print(f"Total reward count: {total_reward_count}")
+    return total_achievement_count, total_reward_count
             
 def reset_ppo_count(env_file_path):
     set_key(
@@ -93,7 +113,9 @@ env = gym.make("zombie-survival-v0")
 check_env(env)
 
 model = PPO.load(f"models/zombie_survival_ppo{(ppo_count-1)%4}")
-render_env(env, model, sleep_time=0.25)
+
+render_env(env, model, sleep_time=0.25, result_time=15.0)
+exit(0)
 
 while(True):
     print(f"Starting PPO training with count: {ppo_count}")
@@ -106,6 +128,6 @@ while(True):
         value_to_set=f"{ppo_count}"
     )
     model.save(f"models/zombie_survival_ppo{ppo_count%4}")
-    if (ppo_count + 1) % 25 == 0:
+    if (ppo_count + 1) % 5 == 0:
         model.save(f"models/zombie_survival_ppo{ppo_count + 1}%")
     print(f"Saved PPO model with count: {ppo_count%4}")

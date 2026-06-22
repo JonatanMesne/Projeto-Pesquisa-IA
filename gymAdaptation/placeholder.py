@@ -82,7 +82,7 @@ class Placeholder(gym.Env):
         action_duration = current_action.duration # type: ignore
         reward = current_action.action(self.state) # type: ignore
         if reward == self.state.invalid_return_value:
-            return self.observation(), reward, False, False, {"is_success": False}   #is success???
+            return self.observation(), reward, False, False, {}
         
         oldAgentHealth = self.state.agent.health
         oldZombiesKilled = self.state.zombies_killed
@@ -156,7 +156,15 @@ class Placeholder(gym.Env):
         # Retorna uma tupla contendo:
         # a observação do próximo estado, a recompensa imediata obtida, se o estado é final,
         # se a simulação deve ser encerrada (estado inválido, mas não final) e informações adicionais
-        return self.observation(), reward, self.state.time_elapsed >= self.state.time_limit or reward < -700, False, {}  #put achievement info
+        return self.observation(), reward, self.state.time_elapsed >= self.state.time_limit or reward < -700, False, {
+                "zombie": self.state.zombie_achievement_count,
+                "melee": self.state.melee_achievement_count,
+                "ranged": self.state.ranged_achievement_count,
+                "door": self.state.door_achievement_count,
+                "food": self.state.food_achievement_count,
+                "water": self.state.water_achievement_count,
+                "medkit": self.state.medkit_achievement_count
+            }
 
     # Método (opcional) que implementa interface gráfica
     def render(self) -> RenderFrame | list[RenderFrame] | None:

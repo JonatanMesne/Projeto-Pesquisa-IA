@@ -35,8 +35,10 @@ class DoorAction(Action):   #class for opening and closing doors
                 if world_object.opened_by_agent == False:
                     world_object.opened_by_agent = True
                     state.doors_opened += 1
-                    if state.doors_opened == 1:
-                        return state.achievement_reward // 2
+                    for threshold in state.medkits_used_achievement_thresholds:
+                        if state.doors_opened == threshold:
+                            state.door_achievement_count += 1
+                            return state.achievement_reward // 2
                     return 30
                 return 0
             else:

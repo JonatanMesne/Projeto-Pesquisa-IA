@@ -84,12 +84,14 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                             state.ranged_kills += 1
                             for i in range(len(state.ranged_kills_achievement_thresholds)):
                                 if state.ranged_kills == state.ranged_kills_achievement_thresholds[i]:
+                                    state.ranged_achievement_count += 1
                                     return_value += (state.achievement_reward * (i + 1))
                                     break
                         else:
                             state.melee_kills += 1
                             for i in range(len(state.melee_kills_achievement_thresholds)):
                                 if state.melee_kills == state.melee_kills_achievement_thresholds[i]:
+                                    state.melee_achievement_count += 1
                                     return_value += (state.achievement_reward * (i + 1))
                                     break
                         # entity died — remove from map
@@ -97,6 +99,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                             achievement = False
                             for i in range(len(state.zombies_killed_achievement_thresholds)):
                                 if state.zombies_killed == state.zombies_killed_achievement_thresholds[i]:
+                                    state.zombie_achievement_count += 1
                                     return_value += (state.achievement_reward * (i + 1))
                                     achievement = True
                                     break

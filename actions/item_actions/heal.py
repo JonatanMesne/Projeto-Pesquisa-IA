@@ -20,6 +20,7 @@ class Heal(Action):     #class for the action of perceiving the surroundings
                 print(f"You used a medkit and healed {heal_item.heal_amount} health. Current health: {state.agent.health}") # type: ignore
             for i in range(len(state.medkits_used_achievement_thresholds)):
                 if state.medkits_used == state.medkits_used_achievement_thresholds[i]:
+                    state.medkit_achievement_count += 1
                     return state.achievement_reward * (i + 1) + health_healed * 6
             if health_healed == heal_item.heal_amount:
                 return health_healed * 6

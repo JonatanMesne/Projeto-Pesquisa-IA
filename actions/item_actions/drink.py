@@ -20,6 +20,7 @@ class Drink(Action):     #class for the action of drinking water
                 print(f"You drank water and reduced your thirst by {water.thirst_satiation}. Current thirst: {state.agent.thirst}")
             for i in range(len(state.water_drank_achievement_thresholds)):
                 if state.water_drank == state.water_drank_achievement_thresholds[i]:
+                    state.water_achievement_count += 1
                     return state.achievement_reward * (i + 1) + thirst_satiation * 4
             if thirst_satiation == water.thirst_satiation:
                 return thirst_satiation * 4

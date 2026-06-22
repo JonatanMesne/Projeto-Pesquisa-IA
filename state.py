@@ -103,12 +103,19 @@ class State:
         self.food_eaten = 0
         self.medkits_used = 0
         self.zombies_killed_achievement_thresholds = [1, 10, 25, 50]
+        self.zombie_achievement_count = 0
         self.doors_opened_achievement_thresholds = [1, 5, 15, 30]
+        self.door_achievement_count = 0
         self.melee_kills_achievement_thresholds = [1, 5, 10, 25]
+        self.melee_achievement_count = 0
         self.ranged_kills_achievement_thresholds = [1, 5, 10, 25]
+        self.ranged_achievement_count = 0
         self.food_eaten_achievement_thresholds = [1, 5, 10, 25]
+        self.food_achievement_count = 0
         self.water_drank_achievement_thresholds = [1, 5, 10, 25]
+        self.water_achievement_count = 0
         self.medkits_used_achievement_thresholds = [1, 5, 10, 25]
+        self.medkit_achievement_count = 0
         self.achievement_reward = 500
         
     def print_self(self):
