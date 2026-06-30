@@ -112,15 +112,16 @@ print(f"PPO_COUNT from .env: {ppo_count}")
 env = gym.make("zombie-survival-v0")
 check_env(env)
 
-model = PPO.load(f"models/zombie_survival_ppo{(ppo_count-1)%4}")
+# model = PPO.load(f"models/zombie_survival_ppo{(ppo_count-1)%4}")
 
-render_env(env, model, sleep_time=0.25, result_time=15.0)
+model = PPO.load(f"models/zombie_survival_ppo15%")
+render_env(env, model, sleep_time=0.0, result_time=0.0)
 exit(0)
 
 while(True):
     print(f"Starting PPO training with count: {ppo_count}")
     model = PPO.load(f"models/zombie_survival_ppo{ppo_count%4}", env=env)
-    model.learn(total_timesteps=75000, log_interval=5) #roughly 6 minutes of training per iteration
+    model.learn(total_timesteps=50000, log_interval=5) #roughly 6 minutes of training per iteration
     ppo_count += 1
     set_key(
         dotenv_path=env_file_path,

@@ -120,7 +120,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
                     if dmg <= 0:
                         dmg = 1  # Ensure at least 1 damage is dealt to walls
                     target_cell.durability -= dmg
-                    # damage_total += 0.1 
+                    damage_total -= 10
                     if target_cell.durability <= 0:
                         state.world.grid[target_position[0]][target_position[1]] = Ground()  # Replace with a passable ground tile
                         if(state.prints_enabled):
@@ -131,7 +131,7 @@ class Attack(Action):     #class for the action of perceiving the surroundings
             if knockback > 0 and len(hits) > 0:
                 for entity in reversed(hits):
                     # attempt to push the entity away from attacker up to knockback tiles
-                    for _k in range(knockback):
+                    for __ in range(knockback):
                         new_x = entity.position[0] + direction_array[0]
                         new_y = entity.position[1] + direction_array[1]
                         # check bounds
